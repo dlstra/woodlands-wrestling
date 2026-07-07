@@ -3098,19 +3098,27 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
   vid.src = HOME_SETTINGS.pinOfWeekVideo;
   vid.controls = true;
   vid.playsInline = true;
-  vid.muted = true;
   vid.preload = 'metadata';
   vid.setAttribute('aria-label', 'Highlight of the Week');
   frame.innerHTML = '';
   frame.appendChild(vid);
 
-  // Play only while scrolled into view; pause the moment it isn't.
+  // Play with sound only while scrolled into view; pause (and reset to
+  // muted, ready for the next unmuted attempt) the moment it isn't.
+  // Browsers block unmuted autoplay unless it follows a direct user
+  // gesture — scrolling doesn't count — so if the unmuted attempt is
+  // rejected, fall back to a muted autoplay rather than staying frozen.
   const hmVideoObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        vid.play().catch(() => {});
+        vid.muted = false;
+        vid.play().catch(() => {
+          vid.muted = true;
+          vid.play().catch(() => {});
+        });
       } else {
         vid.pause();
+        vid.muted = true;
       }
     });
   }, { threshold: 0.5 });
