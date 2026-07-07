@@ -2852,8 +2852,8 @@
           <div class="spotlight-body"><div class="spotlight-name">Hollister Home Services</div><div class="spotlight-divider"></div><div class="spotlight-bio">Hollister Home Services is a family-owned company proudly serving Montgomery County since 2006. We provide reliable, professional HVAC, pool service, and handyman solutions to keep your home comfortable, functional, and refreshing all year long. Our commitment to quality workmanship and dependable service has made us a trusted choice for homeowners throughout the community.</div><a href="http://hollisterhomeservices.com" target="_blank" class="spotlight-link">↗ Visit Website</a></div>
         </div>
         <div class="spotlight-card">
-          <div class="spotlight-logo-wrap"><div class="spotlight-logo-placeholder"><span>🏢</span>Upload your logo here</div></div>
-          <div class="spotlight-body"><div class="spotlight-name">Your Name Here</div><div class="spotlight-divider"></div><div class="spotlight-bio">Add a short description of this business.</div><a href="https://YOUR_WEBSITE_URL" target="_blank" class="spotlight-link">↗ Visit Website</a></div>
+          <div class="spotlight-logo-wrap"><img src="sponsor-images/woodlands-dentistry-orthodontics.png" alt="The Woodlands Dentistry &amp; Orthodontics logo" /></div>
+          <div class="spotlight-body"><div class="spotlight-name">The Woodlands Dentistry &amp; Orthodontics</div><div class="spotlight-divider"></div><div class="spotlight-bio">The Woodlands Dentistry &amp; Orthodontics is committed to helping patients of all ages achieve healthy, beautiful smiles in a comfortable and welcoming environment. Our experienced team provides personalized dental and orthodontic care using the latest technology to deliver precise, efficient, and compassionate treatment. Whether you need routine preventive care, restorative dentistry, or orthodontic services, we're dedicated to making every visit a positive experience while helping you smile with confidence.</div><a href="https://www.woodlandsdentistryandorthodontics.com/" target="_blank" class="spotlight-link">↗ Visit Website</a></div>
         </div>
         <div class="spotlight-card">
           <div class="spotlight-logo-wrap"><div class="spotlight-logo-placeholder"><span>🏢</span>Upload your logo here</div></div>
@@ -3063,8 +3063,15 @@ const HOME_SETTINGS = {
   // and set pinOfWeekVideo (takes priority), or paste a YouTube embed URL into
   // pinOfWeekEmbed (e.g. "https://www.youtube.com/embed/VIDEO_ID"). Leave both
   // "" for the placeholder.
-  pinOfWeekVideo: "highlight-of-the-week.mp4",
+  pinOfWeekVideo: "highlight-of-the-week-with-music.mp4",
   pinOfWeekEmbed: "",
+  // Required attribution credit for the free Uppbeat music track mixed into
+  // pinOfWeekVideo above. Leave "" if that video has no Uppbeat music in it.
+  pinOfWeekMusicCredit: {
+    text: "Music from Uppbeat (free for Creators!): Stay Hungry — Vens Adams",
+    url: "https://uppbeat.io/t/vens-adams/stay-hungry",
+    licenseCode: "US3GRUXTHDEJB5PW"
+  },
 
   // GALLERY — reuses the same real team photos as the hero photo strip
   gallery: [
@@ -3108,6 +3115,18 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
     });
   }, { threshold: 0.5 });
   hmVideoObserver.observe(vid);
+
+  if (HOME_SETTINGS.pinOfWeekMusicCredit && HOME_SETTINGS.pinOfWeekMusicCredit.text) {
+    const credit = document.createElement('p');
+    credit.style.cssText = 'text-align:center; font-size:11px; color:var(--muted); margin-top:10px; font-style:italic;';
+    const link = document.createElement('a');
+    link.href = HOME_SETTINGS.pinOfWeekMusicCredit.url;
+    link.target = '_blank';
+    link.style.color = 'inherit';
+    link.textContent = HOME_SETTINGS.pinOfWeekMusicCredit.text;
+    credit.appendChild(link);
+    frame.insertAdjacentElement('afterend', credit);
+  }
 } else if (HOME_SETTINGS.pinOfWeekEmbed) {
   const frame = document.getElementById('hmPinFrame');
   frame.innerHTML = '<iframe src="' + HOME_SETTINGS.pinOfWeekEmbed +
