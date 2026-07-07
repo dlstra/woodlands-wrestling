@@ -85,6 +85,10 @@
         inset -1px 0 0 rgba(35,85,50,0.45),
         0 0 20px rgba(50,100,60,0.18);
       color: #1a0e04 !important;
+      text-shadow:
+        0 -1px 1px rgba(220,160,80,0.4),
+        0  1px 2px rgba(0,0,0,0.9),
+        1px 1px 0 rgba(15,55,30,0.7) !important;
     }
 
     .btn:hover {
@@ -97,7 +101,24 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: #B07235 #0a0a0a;
+    }
+
+    /* ── CUSTOM SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #C88040 0%, #8C5228 50%, #AE6C30 100%);
+      border-radius: 7px;
+      border: 2px solid #0a0a0a;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #D89050 0%, #9C6238 50%, #BE7C40 100%);
+    }
+    ::-webkit-scrollbar-corner { background: #0a0a0a; }
 
     body {
       background: var(--dark);
@@ -266,8 +287,13 @@
     }
 
     /* ── PAGES ── */
-    .page { display: none; padding-top: 60px; min-height: 100vh; }
+    .page { display: none; padding-top: 60px; min-height: 100vh; opacity: 1; transition: opacity 0.22s ease; }
     .page.active { display: block; }
+    .page.page-fading { opacity: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .page { transition: none; }
+    }
 
     /* ── HERO ── */
     .hero {
@@ -477,15 +503,17 @@
     }
 
     .athlete-card {
-      background: rgba(255,255,255,0.04);
+      background-image: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9)), url('tartan-bg.png');
+      background-size: cover; background-position: center;
       border: 1px solid var(--border);
       border-radius: 10px;
       overflow: hidden;
-      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      opacity: 0;
+      transition: border-color 0.2s, transform 0.2s, opacity 0.6s ease;
     }
 
     .athlete-card:hover {
-      background: rgba(255,255,255,0.07);
+      background-image: linear-gradient(rgba(24,24,24,0.78), rgba(24,24,24,0.78)), url('tartan-bg.png');
       transform: translateY(-3px);
     }
 
@@ -597,8 +625,11 @@
     .coaches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
 
     .coach-card {
-      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-      border-radius: 10px; overflow: hidden; transition: border-color 0.2s;
+      background-image: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9)), url('tartan-bg.png');
+      background-size: cover; background-position: center;
+      border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden; opacity: 0;
+      transition: border-color 0.2s, opacity 0.6s ease;
     }
 
     .coach-card:hover { border-color: rgba(176,114,53,0.35); }
@@ -687,12 +718,17 @@
     .support-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin-bottom: 48px; }
 
     .support-card {
-      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-      border-radius: 10px; padding: 28px 24px;
-      transition: border-color 0.2s, background 0.2s;
+      background-image: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9)), url('tartan-bg.png');
+      background-size: cover; background-position: center;
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 28px 24px; opacity: 0;
+      transition: border-color 0.2s, opacity 0.6s ease;
     }
 
-    .support-card:hover { border-color: rgba(176,114,53,0.3); background: rgba(255,255,255,0.06); }
+    .support-card:hover {
+      border-color: rgba(176,114,53,0.3);
+      background-image: linear-gradient(rgba(24,24,24,0.78), rgba(24,24,24,0.78)), url('tartan-bg.png');
+    }
     .support-tier { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.1em; color: var(--gold); }
     .support-amount { font-family: 'Cinzel', serif; font-size: 12px; color: var(--muted); margin: 6px 0 16px; letter-spacing: 0.08em; }
     .support-perks { list-style: none; display: flex; flex-direction: column; gap: 8px; }
@@ -716,12 +752,17 @@
     @media (max-width: 700px) { .donate-grid { grid-template-columns: 1fr; } }
 
     .donate-card {
-      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-      border-radius: 12px; padding: 36px 32px; text-align: center;
-      transition: border-color 0.2s, background 0.2s;
+      background-image: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9)), url('tartan-bg.png');
+      background-size: cover; background-position: center;
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 36px 32px; text-align: center; opacity: 0;
+      transition: border-color 0.2s, opacity 0.6s ease;
     }
 
-    .donate-card:hover { border-color: rgba(176,114,53,0.35); background: rgba(255,255,255,0.06); }
+    .donate-card:hover {
+      border-color: rgba(176,114,53,0.35);
+      background-image: linear-gradient(rgba(24,24,24,0.78), rgba(24,24,24,0.78)), url('tartan-bg.png');
+    }
     .donate-icon { display: none; }
     .donate-platform { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 0.1em; color: var(--light); margin-bottom: 8px; }
     .donate-handle { font-family: 'Cinzel', serif; font-size: 12px; color: var(--gold); letter-spacing: 0.12em; margin-bottom: 20px; }
@@ -765,12 +806,17 @@
     .sponsors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
 
     .sponsor-card {
-      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-      border-radius: 10px; padding: 28px 20px; text-align: center;
-      transition: border-color 0.2s, background 0.2s;
+      background-image: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9)), url('tartan-bg.png');
+      background-size: cover; background-position: center;
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 28px 20px; text-align: center; opacity: 0;
+      transition: border-color 0.2s, opacity 0.6s ease;
     }
 
-    .sponsor-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(176,114,53,0.25); }
+    .sponsor-card:hover {
+      border-color: rgba(176,114,53,0.25);
+      background-image: linear-gradient(rgba(24,24,24,0.78), rgba(24,24,24,0.78)), url('tartan-bg.png');
+    }
 
     .sponsor-logo-placeholder {
       width: 100%; height: 80px;
@@ -800,12 +846,17 @@
     .resource-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
 
     .resource-card {
-      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-      border-radius: 10px; padding: 22px 20px;
-      transition: border-color 0.2s, background 0.2s;
+      background-image: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9)), url('tartan-bg.png');
+      background-size: cover; background-position: center;
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 22px 20px; opacity: 0;
+      transition: border-color 0.2s, opacity 0.6s ease;
     }
 
-    .resource-card:hover { border-color: rgba(176,114,53,0.3); background: rgba(255,255,255,0.07); }
+    .resource-card:hover {
+      border-color: rgba(176,114,53,0.3);
+      background-image: linear-gradient(rgba(24,24,24,0.78), rgba(24,24,24,0.78)), url('tartan-bg.png');
+    }
     .resource-icon { display: none; }
     .resource-title { font-family: 'Cinzel', serif; font-size: 16px; letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; }
     .resource-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
@@ -825,29 +876,31 @@
     }
 
     .spotlight-card {
-      background: rgba(255,255,255,0.04);
+      background-image: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9)), url('tartan-bg.png');
+      background-size: cover; background-position: center;
       border: 1px solid var(--border);
       border-radius: 14px;
       overflow: hidden;
-      transition: border-color 0.25s, background 0.25s, transform 0.25s;
+      opacity: 0;
+      transition: border-color 0.25s, transform 0.25s, opacity 0.6s ease;
       display: flex;
       flex-direction: column;
     }
 
     .spotlight-card:hover {
-      background: rgba(255,255,255,0.07);
+      background-image: linear-gradient(rgba(24,24,24,0.78), rgba(24,24,24,0.78)), url('tartan-bg.png');
       border-color: rgba(176,114,53,0.4);
       transform: translateY(-4px);
     }
 
     .spotlight-logo-wrap {
       width: 100%;
-      height: 160px;
+      height: 190px;
       background: rgba(255,255,255,0.06);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 18px;
       border-bottom: 1px solid var(--border);
       position: relative;
       overflow: hidden;
@@ -865,8 +918,8 @@
     }
 
     .spotlight-logo-wrap img {
-      max-width: 200px;
-      max-height: 110px;
+      max-width: 240px;
+      max-height: 150px;
       object-fit: contain;
       position: relative;
       z-index: 1;
@@ -980,11 +1033,14 @@
     }
 
     .stat-card {
-      background: rgba(255,255,255,0.04);
+      background-image: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9)), url('tartan-bg.png');
+      background-size: cover; background-position: center;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 18px 16px;
       text-align: center;
+      opacity: 0;
+      transition: opacity 0.6s ease;
     }
 
     .stat-number {
@@ -1081,15 +1137,20 @@
     }
 
     .value-card {
-      background: rgba(255,255,255,0.04);
+      background-image: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9)), url('tartan-bg.png');
+      background-size: cover; background-position: center;
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 24px 20px;
       text-align: center;
-      transition: border-color 0.2s, background 0.2s;
+      opacity: 0;
+      transition: border-color 0.2s, opacity 0.6s ease;
     }
 
-    .value-card:hover { border-color: rgba(176,114,53,0.3); background: rgba(255,255,255,0.07); }
+    .value-card:hover {
+      border-color: rgba(176,114,53,0.3);
+      background-image: linear-gradient(rgba(24,24,24,0.78), rgba(24,24,24,0.78)), url('tartan-bg.png');
+    }
 
     .value-icon { font-size: 30px; margin-bottom: 12px; }
 
@@ -1136,10 +1197,13 @@
         top: 60px; left: 0; right: 0;
         background: rgba(5,5,5,0.97);
         flex-direction: column;
+        align-items: stretch;
         padding: 16px;
         gap: 4px;
         z-index: 99;
         border-bottom: 1px solid var(--border);
+        max-height: calc(100vh - 60px);
+        overflow-y: auto;
       }
 
       .nav-links.open { display: flex; }
@@ -1168,9 +1232,14 @@
       }
 
       /* HERO */
-      .hero { height: 100svh; }
+      .hero { height: calc(100svh - 60px); }
 
       .hero-overlay-top { padding: 20px 20px 40px; height: 35%; }
+
+      /* Anchor the photo track near the bottom divider instead of a
+         top-percentage position — on a tall phone screen that leaves
+         a large dead gap of plain background beneath the photos. */
+      .track-wrap { top: auto; bottom: 100px; transform: none; }
 
       .hero-title { font-size: 42px; }
       .hero-title span { font-size: 30px; }
@@ -1256,10 +1325,243 @@
       color: rgba(240,235,224,0.25); text-transform: uppercase;
       position: relative; z-index: 2;
     }
+
+    /* ══════════════════════════════════════
+       HOME PAGE MODULE — merged from new-home.html
+       (Ken Burns hero layer, countdown, stats, gallery,
+        pin of the week, thread dividers, progress bar)
+    ══════════════════════════════════════ */
+
+    .hm-hero-tartan {
+      position: absolute; inset: -14%;
+      background-image: url('tartan-bg.png');
+      background-size: cover; background-position: center;
+      animation: hmKenBurns 22s ease-in-out infinite alternate,
+                 hmTartanPulse 10s ease-in-out infinite;
+      z-index: 1; pointer-events: none;
+    }
+
+    @keyframes hmKenBurns {
+      from { transform: scale(1.02) translate(0, 0); }
+      to   { transform: scale(1.28) translate(3%, -2.5%); }
+    }
+
+    @keyframes hmTartanPulse {
+      0%, 100% { opacity: 0.55; }
+      50%      { opacity: 0.25; }
+    }
+
+    #hm-progress {
+      position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+      background: var(--gold); z-index: 300; pointer-events: none;
+    }
+
+    .hm-thread {
+      display: block; width: 100%; height: 56px; margin: 48px 0;
+      border-top: 3px solid #8B1A1A; border-bottom: 3px solid #2d5a27;
+      background-image:
+        linear-gradient(rgba(8,8,8,0.42), rgba(8,8,8,0.42)),
+        url('tartan-bg.png');
+      background-size: cover, 220%;
+      background-position: center, 50% 50%;
+      animation: hmThreadPan 24s ease-in-out infinite alternate;
+    }
+
+    @keyframes hmThreadPan {
+      from { background-position: center, 30% 40%; }
+      to   { background-position: center, 70% 60%; }
+    }
+
+    .hm-section { max-width: 1080px; margin: 0 auto; padding: 32px 48px; }
+
+    .hm-eyebrow {
+      font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--gold); text-align: center;
+    }
+
+    .hm-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px, 5vw, 48px);
+      letter-spacing: 0.06em; text-align: center; margin-top: 6px; color: var(--light);
+    }
+
+    /* ── Countdown card ── */
+    .hm-countdown-wrap {
+      position: relative; z-index: 11; max-width: 780px;
+      margin: -95px auto 0; padding: 0 24px;
+    }
+
+    .hm-countdown {
+      background-image:
+        linear-gradient(rgba(12,12,12,0.86), rgba(12,12,12,0.86)),
+        url('tartan-bg.png');
+      background-size: cover; background-position: center;
+      border: 1px solid var(--border); border-top: 3px solid var(--gold);
+      padding: 30px 34px 34px; text-align: center; border-radius: 4px;
+    }
+
+    .hm-countdown-label {
+      font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--gold);
+    }
+
+    .hm-countdown-opponent {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 4.5vw, 40px);
+      letter-spacing: 0.05em; margin-top: 8px; color: var(--light);
+    }
+
+    .hm-countdown-meta { color: var(--muted); font-style: italic; margin-top: 2px; }
+
+    .hm-countdown-digits { display: flex; justify-content: center; gap: clamp(14px, 4vw, 32px); margin-top: 24px; }
+
+    .hm-digit-block { min-width: 70px; }
+
+    .hm-digit {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(42px, 7vw, 62px);
+      line-height: 1; color: var(--light);
+      background: rgba(139,26,26,0.28); border: 1px solid rgba(139,26,26,0.6);
+      padding: 12px 8px 8px; border-radius: 4px;
+    }
+
+    .hm-digit-label {
+      font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); margin-top: 8px;
+    }
+
+    /* ── Stats band ── */
+    .hm-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 40px; }
+
+    .hm-stat {
+      text-align: center; padding: 30px 16px 26px;
+      background-image:
+        linear-gradient(rgba(18,18,18,0.88), rgba(18,18,18,0.88)),
+        url('tartan-bg.png');
+      background-size: cover; background-position: center;
+      border: 1px solid var(--border);
+      border-bottom: 3px solid #2d5a27; border-radius: 8px;
+      opacity: 0; transform: translateY(26px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .hm-stat.visible { opacity: 1; transform: translateY(0); }
+
+    .hm-stat-number {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(46px, 7vw, 68px);
+      line-height: 1; color: var(--gold);
+    }
+
+    .hm-stat-label {
+      font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--muted); margin-top: 10px;
+    }
+
+    /* ── Photo carousel ── */
+    .hm-carousel {
+      position: relative; margin-top: 40px; aspect-ratio: 4 / 3;
+      background: rgba(0,0,0,0.55); border: 1px solid var(--border);
+      border-top: 3px solid #2d5a27; border-radius: 8px; overflow: hidden;
+    }
+
+    .hm-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease; }
+    .hm-slide.active { opacity: 1; }
+    .hm-slide img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+    .hm-slide-caption {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 24px 14px;
+      background: linear-gradient(to top, rgba(8,8,8,0.85), transparent);
+      font-style: italic; color: var(--light); font-size: 15px; text-align: center;
+    }
+
+    .hm-car-btn {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(8,8,8,0.6); border: 1px solid var(--border);
+      color: var(--gold); font-size: 20px; line-height: 1; cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .hm-car-btn:hover { background: rgba(139,26,26,0.8); }
+    .hm-car-btn.prev { left: 14px; }
+    .hm-car-btn.next { right: 14px; }
+
+    .hm-car-dots { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+
+    .hm-car-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      border: 1px solid var(--gold); background: transparent; cursor: pointer;
+      padding: 0; transition: background 0.2s, transform 0.2s;
+    }
+
+    .hm-car-dot.active { background: var(--gold); transform: scale(1.25); }
+
+    /* ── Pin of the Week ── */
+    .hm-pin-frame {
+      margin-top: 40px; position: relative; aspect-ratio: 16 / 9;
+      background-image:
+        linear-gradient(rgba(10,10,10,0.82), rgba(10,10,10,0.82)),
+        url('tartan-bg.png');
+      background-size: cover; background-position: center;
+      border: 1px solid var(--border);
+      border-top: 3px solid #8B1A1A; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+      opacity: 0; transform: translateY(26px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .hm-pin-frame.visible { opacity: 1; transform: translateY(0); }
+    .hm-pin-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+    /* Portrait phone-shot clips get their own frame shape instead of a
+       letterboxed 16:9 box, so the video fills the space naturally. */
+    .hm-pin-frame.has-video {
+      aspect-ratio: auto;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hm-pin-frame video {
+      width: 100%;
+      height: auto;
+      max-height: 80vh;
+      display: block;
+      border-radius: 7px;
+    }
+
+    .hm-pin-placeholder { text-align: center; color: var(--muted); font-style: italic; padding: 24px; }
+
+    .hm-cta-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; margin: 40px 0 8px; }
+
+    @media (max-width: 768px) {
+      .hm-stats { grid-template-columns: 1fr; }
+      .hm-section { padding: 24px 20px; }
+      .hm-countdown-wrap { margin-top: -70px; }
+      .hm-countdown-digits { gap: 10px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hm-hero-tartan { animation: none; opacity: 0.3; }
+      .hm-thread { animation: none; }
+      .hm-stat, .hm-pin-frame { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ══ SITE-WIDE SCROLL REVEAL ══ */
+    .athlete-card.revealed, .coach-card.revealed, .support-card.revealed,
+    .donate-card.revealed, .sponsor-card.revealed, .resource-card.revealed,
+    .spotlight-card.revealed, .value-card.revealed, .stat-card.revealed {
+      opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .athlete-card, .coach-card, .support-card, .donate-card,
+      .sponsor-card, .resource-card, .spotlight-card, .value-card, .stat-card {
+        opacity: 1; transition: none;
+      }
+    }
   </style>
 </head>
 <body>
 
+<div id="hm-progress"></div>
 <div class="tartan-bg"></div>
 <div class="smoke"></div>
 <img id="donate-watermark" src="logo.png" style="
@@ -1279,24 +1581,32 @@
     <span></span><span></span><span></span>
   </button>
   <div class="nav-links">
-    <button onclick="showPage('home')"        id="nav-home"        class="active">Home</button>
-    <button onclick="showPage('about')"       id="nav-about">About Us</button>
-    <div class="nav-dropdown" id="roster-dropdown">
-      <button class="nav-dropdown-trigger" id="nav-roster" onclick="toggleDropdown('dropdown-menu')">
-        Roster ▾
+    <div class="nav-dropdown" id="team-dropdown">
+      <button class="nav-dropdown-trigger" id="nav-team-trigger" onclick="toggleDropdown('team-dropdown-menu')">
+        Team ▾
       </button>
-      <div class="nav-dropdown-menu" id="dropdown-menu">
-        <button onclick="showPage('roster-boys'); closeDropdown()">Boys Roster</button>
-        <button onclick="showPage('roster-girls'); closeDropdown()">Girls Roster</button>
+      <div class="nav-dropdown-menu" id="team-dropdown-menu">
+        <button onclick="showPage('about');       closeAllDropdowns()">About Us</button>
+        <button onclick="showPage('roster-boys'); closeAllDropdowns()">Boys Roster</button>
+        <button onclick="showPage('roster-girls');closeAllDropdowns()">Girls Roster</button>
+        <button onclick="showPage('coaches');     closeAllDropdowns()">Coaches</button>
       </div>
     </div>
-    <button onclick="showPage('schedule')"    id="nav-schedule">Schedule</button>
-    <button onclick="showPage('coaches')"     id="nav-coaches">Coaches</button>
-    <div class="nav-dropdown" id="info-dropdown">
-      <button class="nav-dropdown-trigger" id="nav-info-trigger" onclick="toggleDropdown('info-dropdown-menu')">
-        Information ▾
+    <div class="nav-dropdown" id="season-dropdown">
+      <button class="nav-dropdown-trigger" id="nav-season-trigger" onclick="toggleDropdown('season-dropdown-menu')">
+        Season ▾
       </button>
-      <div class="nav-dropdown-menu" id="info-dropdown-menu">
+      <div class="nav-dropdown-menu" id="season-dropdown-menu">
+        <button onclick="showPage('schedule');                             closeAllDropdowns()">Schedule</button>
+        <button onclick="goHomeSection('hm-gallery','nav-season-trigger'); closeAllDropdowns()">Gallery</button>
+        <button onclick="goHomeSection('hm-pin','nav-season-trigger');     closeAllDropdowns()">Highlight of the Week</button>
+      </div>
+    </div>
+    <div class="nav-dropdown" id="program-dropdown">
+      <button class="nav-dropdown-trigger" id="nav-program-trigger" onclick="toggleDropdown('program-dropdown-menu')">
+        Program ▾
+      </button>
+      <div class="nav-dropdown-menu" id="program-dropdown-menu">
         <button onclick="showPage('celebrate'); closeAllDropdowns()">Our Sponsors</button>
         <button onclick="showPage('sponsors');  closeAllDropdowns()">Become a Sponsor</button>
         <button onclick="showPage('booster');   closeAllDropdowns()">Booster Club</button>
@@ -1313,6 +1623,7 @@
 <!-- ══════════ HOME ══════════ -->
 <div class="page active" id="page-home">
   <div class="hero">
+    <div class="hm-hero-tartan" aria-hidden="true"></div>
     <div class="hero-overlay-top">
       <p class="hero-tagline-top">The Official Site of The Woodlands High School Wrestling Team</p>
       <h1 class="hero-title">Woodlands Wrestling<span>2026–2027</span></h1>
@@ -1327,30 +1638,88 @@
         <div class="divider-diamond"></div>
         <div class="divider-line"></div>
       </div>
-      <div style="margin-top: 22px;">
-        <!--
-          REPLACE href below with your Booster Club signup link.
-          Options: a Google Form, SignUpGenius, PayPal, or any registration URL.
-        -->
-        <a
-          href="https://www.highlanderwrestlingclub.com"
-          target="_blank"
-          style="
-            display:inline-block;
-            font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:0.18em;
-            text-transform:uppercase; text-decoration:none; color:#1a0e04;
-            background-image:url('bronze-plaque.png'); background-size:115%; background-position:center;
-            padding:14px 40px; border-radius:8px; border:none;
-            box-shadow:0 6px 24px rgba(0,0,0,0.7), 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(220,170,90,0.2);
-            text-shadow:0 -1px 1px rgba(220,160,80,0.4), 0 1px 2px rgba(0,0,0,0.9), 1px 1px 0 rgba(15,55,30,0.7);
-            transition:transform 0.2s, filter 0.2s; filter:brightness(1);"
-          onmouseover="this.style.transform='scale(1.04)'; this.style.filter='brightness(1.12)';"
-          onmouseout="this.style.transform='scale(1)'; this.style.filter='brightness(1)';">
-          Highlander Wrestling Club
-        </a>
+    </div>
+  </div>
+
+  <!-- ══ COUNTDOWN ══ -->
+  <div class="hm-countdown-wrap">
+    <div class="hm-countdown">
+      <p class="hm-countdown-label">Next Match</p>
+      <p class="hm-countdown-opponent" id="hmCdOpponent">Loading&hellip;</p>
+      <p class="hm-countdown-meta" id="hmCdMeta">Loading&hellip;</p>
+      <div class="hm-countdown-digits" role="timer" aria-label="Countdown to next match">
+        <div class="hm-digit-block"><div class="hm-digit" id="hmCdDays">--</div><div class="hm-digit-label">Days</div></div>
+        <div class="hm-digit-block"><div class="hm-digit" id="hmCdHours">--</div><div class="hm-digit-label">Hours</div></div>
+        <div class="hm-digit-block"><div class="hm-digit" id="hmCdMins">--</div><div class="hm-digit-label">Minutes</div></div>
+        <div class="hm-digit-block"><div class="hm-digit" id="hmCdSecs">--</div><div class="hm-digit-label">Seconds</div></div>
       </div>
     </div>
   </div>
+
+  <span class="hm-thread"></span>
+
+  <!-- ══ STATS ══ -->
+  <section class="hm-section">
+    <p class="hm-eyebrow">By the Numbers</p>
+    <h2 class="hm-title">This Season</h2>
+    <div class="hm-stats">
+      <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">Total Wins</div></div>
+      <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">Pins</div></div>
+      <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">State Qualifiers</div></div>
+    </div>
+  </section>
+
+  <span class="hm-thread"></span>
+
+  <!-- ══ PHOTO CAROUSEL ══ -->
+  <section class="hm-section" id="hm-gallery">
+    <p class="hm-eyebrow">From the Mat</p>
+    <h2 class="hm-title">Gallery</h2>
+    <div class="hm-carousel" id="hm-carousel" aria-roledescription="carousel" aria-label="Team photo gallery">
+      <button class="hm-car-btn prev" id="hmCarPrev" aria-label="Previous photo">&#10094;</button>
+      <button class="hm-car-btn next" id="hmCarNext" aria-label="Next photo">&#10095;</button>
+    </div>
+    <div class="hm-car-dots" id="hmCarDots"></div>
+  </section>
+
+  <span class="hm-thread"></span>
+
+  <!-- ══ PIN OF THE WEEK ══ -->
+  <section class="hm-section" id="hm-pin">
+    <p class="hm-eyebrow">Highlight Reel</p>
+    <h2 class="hm-title">Highlight of the Week</h2>
+    <div class="hm-pin-frame" id="hmPinFrame">
+      <p class="hm-pin-placeholder">Check back soon — the week's best pin will play right here once it's posted.</p>
+    </div>
+    <div class="hm-cta-row">
+      <button class="btn" onclick="showPage('schedule')">View Full Schedule</button>
+      <button class="btn btn-outline" onclick="showPage('booster')">Support the Boosters</button>
+    </div>
+    <div style="text-align:center; margin-top: 28px;">
+      <!--
+        REPLACE href below with your Booster Club signup link.
+        Options: a Google Form, SignUpGenius, PayPal, or any registration URL.
+      -->
+      <a
+        href="https://www.highlanderwrestlingclub.com"
+        target="_blank"
+        style="
+          display:inline-block;
+          font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:0.18em;
+          text-transform:uppercase; text-decoration:none; color:#1a0e04;
+          background-image:url('bronze-plaque.png'); background-size:115%; background-position:center;
+          padding:14px 40px; border-radius:8px; border:none;
+          box-shadow:0 6px 24px rgba(0,0,0,0.7), 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(220,170,90,0.2);
+          text-shadow:0 -1px 1px rgba(220,160,80,0.4), 0 1px 2px rgba(0,0,0,0.9), 1px 1px 0 rgba(15,55,30,0.7);
+          transition:transform 0.2s, filter 0.2s; filter:brightness(1);"
+        onmouseover="this.style.transform='scale(1.04)'; this.style.filter='brightness(1.12)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.filter='brightness(1)';">
+        Highlander Wrestling Club
+      </a>
+    </div>
+  </section>
+
+  <footer>© 2026–2027 The Woodlands High School Wrestling · The Woodlands, TX</footer>
 </div>
 
 
@@ -1881,48 +2250,48 @@
     <!-- ── COMPETITION SCHEDULE ── -->
     <div class="section-title" style="margin-bottom:24px;">Competition Schedule (Tentative)</div>
     <div style="max-height: 378px; overflow-y: auto; border: 1px solid var(--border); border-radius:8px;">
-    <table class="schedule-table">
+    <table class="schedule-table" id="competition-schedule-table">
       <thead>
         <tr><th>Date</th><th>Event</th><th>Location</th><th>Home / Away</th></tr>
       </thead>
       <tbody>
-        <tr><td>Jun 8–12, 2026</td><td>14U National Duals (Boys)</td><td>Wesley Chapel, FL</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jun 11–14, 2026</td><td>16U National Duals (Boys)</td><td>Herriman, UT</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jun 16–20, 2026</td><td>Women's National Duals</td><td>Milwaukee, WI</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jun 16–28, 2026</td><td>Junior National Duals (Boys)</td><td>Milwaukee, WI</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jul 9–18, 2026</td><td>USMC Junior &amp; 16U National Tournament</td><td>Fargo, ND</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jul 25–26, 2026</td><td>Mat Bash Tournament</td><td>Coppell, TX</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Sep 6, 2026</td><td>Super 32 Prequalifier</td><td>Clear Springs, TX</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Nov 7, 2026</td><td>Inter-Squad Scrimmage</td><td>TWHS 9th Campus</td><td><span class="badge badge-home">Home</span></td></tr>
-        <tr><td>Nov 11, 2026</td><td>Katy</td><td>Katy HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Nov 14, 2026</td><td>Highland Dual Opener</td><td>TWHS 9th Campus</td><td><span class="badge badge-home">Home</span></td></tr>
-        <tr><td>Nov 18, 2026</td><td>JV Scramble – Caney Creek</td><td>TWHS 9th Campus</td><td><span class="badge badge-home">Home</span></td></tr>
-        <tr><td>Nov 20, 2026</td><td>Cy Ridge Classic</td><td>Cy Ridge HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Nov 21, 2026</td><td>Cy Ridge Classic</td><td>Cy Ridge HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Nov 27, 2026</td><td>College Park Clash</td><td>College Park HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Nov 28, 2026</td><td>CP Clash</td><td>College Park HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Dec 2, 2026</td><td>Dual at College Park</td><td>College Park HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Dec 2, 2026</td><td>JV Scramble – New Waerly/Klein Oak</td><td>TWHS 9th Campus</td><td><span class="badge badge-home">Home</span></td></tr>
-        <tr><td>Dec 4, 2026</td><td>Rumble at the Rock</td><td>Rockwall HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Dec 5, 2026</td><td>Rumble at the Rock</td><td>Rockwall HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Dec 5, 2026</td><td>Battle at the Woods</td><td>Klein Cane</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Dec 12, 2026</td><td>Highlander Classic</td><td>TWHS</td><td><span class="badge badge-home">Home</span></td></tr>
-        <tr><td>Dec 19, 2026</td><td>Doc Hess</td><td>Legends Event Center</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Dec 18–21, 2026</td><td>Beast</td><td>Wilmington, DE</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jan 8, 2027</td><td>Cy Fair Invite</td><td>Berry Center</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jan 9, 2027</td><td>Cy Fair Invite</td><td>Berry Center</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jan 15, 2027</td><td>Tiger Classic</td><td>Klein Collins HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jan 16, 2027</td><td>Tiger Classic</td><td>Klein Collins HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jan 20, 2027</td><td>Senior Night – Klein Cane</td><td>TWHS 9th Campus</td><td><span class="badge badge-home">Home</span></td></tr>
-        <tr><td>Jan 23, 2027</td><td>Gator Roll</td><td>Klein Oak HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jan 24, 2027</td><td>Houston Duals</td><td>Sam Houston HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jan 24, 2027</td><td>Ridge Invite</td><td>Cy Ridge HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Jan 26, 2027</td><td>District 8-6A</td><td>TBA</td><td><span class="badge badge-tbd">TBD</span></td></tr>
-        <tr><td>Jan 28, 2027</td><td>District 8-6A</td><td>TBA</td><td><span class="badge badge-tbd">TBD</span></td></tr>
-        <tr><td>Feb 5, 2027</td><td>Region 2-6A</td><td>Allen HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Feb 6, 2027</td><td>Region 2-6A</td><td>Allen HS</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Feb 12, 2027</td><td>State 6A</td><td>Berry Center</td><td><span class="badge badge-away">Away</span></td></tr>
-        <tr><td>Feb 13, 2027</td><td>State 6A</td><td>Berry Center</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-06-12"><td>Jun 8–12, 2026</td><td>14U National Duals (Boys)</td><td>Wesley Chapel, FL</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-06-14"><td>Jun 11–14, 2026</td><td>16U National Duals (Boys)</td><td>Herriman, UT</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-06-20"><td>Jun 16–20, 2026</td><td>Women's National Duals</td><td>Milwaukee, WI</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-06-28"><td>Jun 16–28, 2026</td><td>Junior National Duals (Boys)</td><td>Milwaukee, WI</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-07-18"><td>Jul 9–18, 2026</td><td>USMC Junior &amp; 16U National Tournament</td><td>Fargo, ND</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-07-26"><td>Jul 25–26, 2026</td><td>Mat Bash Tournament</td><td>Coppell, TX</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-09-06"><td>Sep 6, 2026</td><td>Super 32 Prequalifier</td><td>Clear Springs, TX</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-11-07"><td>Nov 7, 2026</td><td>Inter-Squad Scrimmage</td><td>TWHS 9th Campus</td><td><span class="badge badge-home">Home</span></td></tr>
+        <tr data-date="2026-11-11"><td>Nov 11, 2026</td><td>Katy</td><td>Katy HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-11-14"><td>Nov 14, 2026</td><td>Highland Dual Opener</td><td>TWHS 9th Campus</td><td><span class="badge badge-home">Home</span></td></tr>
+        <tr data-date="2026-11-18"><td>Nov 18, 2026</td><td>JV Scramble – Caney Creek</td><td>TWHS 9th Campus</td><td><span class="badge badge-home">Home</span></td></tr>
+        <tr data-date="2026-11-20"><td>Nov 20, 2026</td><td>Cy Ridge Classic</td><td>Cy Ridge HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-11-21"><td>Nov 21, 2026</td><td>Cy Ridge Classic</td><td>Cy Ridge HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-11-27"><td>Nov 27, 2026</td><td>College Park Clash</td><td>College Park HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-11-28"><td>Nov 28, 2026</td><td>CP Clash</td><td>College Park HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-12-02"><td>Dec 2, 2026</td><td>Dual at College Park</td><td>College Park HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-12-02"><td>Dec 2, 2026</td><td>JV Scramble – New Waerly/Klein Oak</td><td>TWHS 9th Campus</td><td><span class="badge badge-home">Home</span></td></tr>
+        <tr data-date="2026-12-04"><td>Dec 4, 2026</td><td>Rumble at the Rock</td><td>Rockwall HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-12-05"><td>Dec 5, 2026</td><td>Rumble at the Rock</td><td>Rockwall HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-12-05"><td>Dec 5, 2026</td><td>Battle at the Woods</td><td>Klein Cane</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-12-12"><td>Dec 12, 2026</td><td>Highlander Classic</td><td>TWHS</td><td><span class="badge badge-home">Home</span></td></tr>
+        <tr data-date="2026-12-19"><td>Dec 19, 2026</td><td>Doc Hess</td><td>Legends Event Center</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2026-12-21"><td>Dec 18–21, 2026</td><td>Beast</td><td>Wilmington, DE</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2027-01-08"><td>Jan 8, 2027</td><td>Cy Fair Invite</td><td>Berry Center</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2027-01-09"><td>Jan 9, 2027</td><td>Cy Fair Invite</td><td>Berry Center</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2027-01-15"><td>Jan 15, 2027</td><td>Tiger Classic</td><td>Klein Collins HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2027-01-16"><td>Jan 16, 2027</td><td>Tiger Classic</td><td>Klein Collins HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2027-01-20"><td>Jan 20, 2027</td><td>Senior Night – Klein Cane</td><td>TWHS 9th Campus</td><td><span class="badge badge-home">Home</span></td></tr>
+        <tr data-date="2027-01-23"><td>Jan 23, 2027</td><td>Gator Roll</td><td>Klein Oak HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2027-01-24"><td>Jan 24, 2027</td><td>Houston Duals</td><td>Sam Houston HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2027-01-24"><td>Jan 24, 2027</td><td>Ridge Invite</td><td>Cy Ridge HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2027-01-26"><td>Jan 26, 2027</td><td>District 8-6A</td><td>TBA</td><td><span class="badge badge-tbd">TBD</span></td></tr>
+        <tr data-date="2027-01-28"><td>Jan 28, 2027</td><td>District 8-6A</td><td>TBA</td><td><span class="badge badge-tbd">TBD</span></td></tr>
+        <tr data-date="2027-02-05"><td>Feb 5, 2027</td><td>Region 2-6A</td><td>Allen HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2027-02-06"><td>Feb 6, 2027</td><td>Region 2-6A</td><td>Allen HS</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2027-02-12"><td>Feb 12, 2027</td><td>State 6A</td><td>Berry Center</td><td><span class="badge badge-away">Away</span></td></tr>
+        <tr data-date="2027-02-13"><td>Feb 13, 2027</td><td>State 6A</td><td>Berry Center</td><td><span class="badge badge-away">Away</span></td></tr>
       </tbody>
     </table>
     </div>
@@ -2481,8 +2850,8 @@
       </div>
       <div class="spotlight-grid">
         <div class="spotlight-card">
-          <div class="spotlight-logo-wrap"><div class="spotlight-logo-placeholder"><span>🏢</span>Upload your logo here</div></div>
-          <div class="spotlight-body"><div class="spotlight-name">Your Name Here</div><div class="spotlight-divider"></div><div class="spotlight-bio">Add a short description of this business.</div><a href="https://YOUR_WEBSITE_URL" target="_blank" class="spotlight-link">↗ Visit Website</a></div>
+          <div class="spotlight-logo-wrap"><img src="sponsor-images/hollister-home-services.jpeg" alt="Hollister Home Services logo" /></div>
+          <div class="spotlight-body"><div class="spotlight-name">Hollister Home Services</div><div class="spotlight-divider"></div><div class="spotlight-bio">Hollister Home Services is a family-owned company proudly serving Montgomery County since 2006. We provide reliable, professional HVAC, pool service, and handyman solutions to keep your home comfortable, functional, and refreshing all year long. Our commitment to quality workmanship and dependable service has made us a trusted choice for homeowners throughout the community.</div><a href="http://hollisterhomeservices.com" target="_blank" class="spotlight-link">↗ Visit Website</a></div>
         </div>
         <div class="spotlight-card">
           <div class="spotlight-logo-wrap"><div class="spotlight-logo-placeholder"><span>🏢</span>Upload your logo here</div></div>
@@ -2538,39 +2907,61 @@
     showPage(id, true);
   });
 
+  const navReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   function showPage(id, fromPop) {
-    /* Show/hide donate page watermark */
-    const donateWm = document.getElementById('donate-watermark');
-    if (donateWm) donateWm.style.display = (id === 'donate') ? 'block' : 'none';
+    const target = document.getElementById('page-' + id);
+    if (!target) return;
+    const current = document.querySelector('.page.active');
 
-    /* Play/pause video based on page */
-    const vid = document.getElementById('yt-player');
-    if (vid) {
-      if (id === 'about') {
-        vid.play();
-      } else {
-        vid.pause();
+    const applyPage = () => {
+      /* Show/hide donate page watermark */
+      const donateWm = document.getElementById('donate-watermark');
+      if (donateWm) donateWm.style.display = (id === 'donate') ? 'block' : 'none';
+
+      /* Play/pause video based on page */
+      const vid = document.getElementById('yt-player');
+      if (vid) {
+        if (id === 'about') {
+          vid.play();
+        } else {
+          vid.pause();
+        }
       }
-    }
 
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-links button, .nav-dropdown-trigger').forEach(b => b.classList.remove('active'));
+      target.classList.add('active');
+      // Highlight the Team trigger for team-group pages
+      if (['about','roster-boys','roster-girls','coaches'].includes(id)) {
+        document.getElementById('nav-team-trigger').classList.add('active');
+      // Highlight the Season trigger for season-group pages
+      } else if (id === 'schedule') {
+        document.getElementById('nav-season-trigger').classList.add('active');
+      // Highlight the Program trigger for program-group pages
+      } else if (['info','sponsors','celebrate','booster','contact','store'].includes(id)) {
+        document.getElementById('nav-program-trigger').classList.add('active');
+      } else {
+        const btn = document.getElementById('nav-' + id);
+        if (btn) btn.classList.add('active');
+      }
+      if (!fromPop) history.pushState({page: id}, '', '#' + id);
+      window.scrollTo(0, 0);
+      closeAllDropdowns();
+      document.querySelector('.nav-links').classList.remove('open');
 
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-links button, .nav-dropdown-trigger').forEach(b => b.classList.remove('active'));
-    document.getElementById('page-' + id).classList.add('active');
-    // Highlight roster trigger for roster pages
-    if (id === 'roster-boys' || id === 'roster-girls') {
-      document.getElementById('nav-roster').classList.add('active');
-    // Highlight info trigger for info-dropdown pages
-    } else if (['info','sponsors','celebrate','booster','contact'].includes(id)) {
-      document.getElementById('nav-info-trigger').classList.add('active');
+      // Fade the newly-shown page in
+      target.classList.add('page-fading');
+      void target.offsetWidth;
+      target.classList.remove('page-fading');
+    };
+
+    if (current && current !== target && !navReduceMotion) {
+      current.classList.add('page-fading');
+      setTimeout(applyPage, 180);
     } else {
-      const btn = document.getElementById('nav-' + id);
-      if (btn) btn.classList.add('active');
+      applyPage();
     }
-    if (!fromPop) history.pushState({page: id}, '', '#' + id);
-    window.scrollTo(0, 0);
-    closeAllDropdowns();
-    document.querySelector('.nav-links').classList.remove('open');
   }
 
   function toggleDropdown(menuId) {
@@ -2583,10 +2974,6 @@
   function closeAllDropdowns() {
     document.querySelectorAll('.nav-dropdown-menu').forEach(m => m.classList.remove('open'));
   }
-
-  // Keep old alias for roster dropdown
-  function toggleDropdown_roster() { toggleDropdown('dropdown-menu'); }
-  function closeDropdown() { closeAllDropdowns(); }
 
   // Close all dropdowns when clicking outside
   document.addEventListener('click', function(e) {
@@ -2628,9 +3015,9 @@
     track.appendChild(panel);
   });
 
-  /* Remove past practice dates */
+  /* Remove past practice + competition dates (multi-day events use their last day) */
   const today = new Date(); today.setHours(0,0,0,0);
-  document.querySelectorAll('#summer-practice-table tbody tr[data-date]').forEach(row => {
+  document.querySelectorAll('#summer-practice-table tbody tr[data-date], #competition-schedule-table tbody tr[data-date]').forEach(row => {
     const d = new Date(row.dataset.date + 'T00:00:00');
     if (d < today) row.remove();
   });
@@ -2649,6 +3036,243 @@
     const expanded = bio.classList.toggle('expanded');
     btn.textContent = expanded ? 'Show Less ‹' : 'Show More ›';
   }
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   SEASON SETTINGS — home page countdown / stats / gallery / pin.
+   This is the only block you need to edit during the season.
+═══════════════════════════════════════════════════════════════ */
+const HOME_SETTINGS = {
+
+  // NEXT MATCH — update after each event
+  nextMatch: {
+    opponent: "Mat Bash Tournament",
+    // Format: "YYYY-MM-DDTHH:MM:SS" in local time — exact start time
+    // wasn't listed on the schedule, so 8:00 AM is a placeholder.
+    date: "2026-07-25T08:00:00",
+    location: "Coppell, TX — time TBD"
+  },
+
+  // SEASON STATS — bump these as the season goes
+  stats: {
+    dualWins: 0,
+    pins: 0,
+    stateQualifiers: 0
+  },
+
+  // HIGHLIGHT OF THE WEEK — either drop a local video file into the project
+  // and set pinOfWeekVideo (takes priority), or paste a YouTube embed URL into
+  // pinOfWeekEmbed (e.g. "https://www.youtube.com/embed/VIDEO_ID"). Leave both
+  // "" for the placeholder.
+  pinOfWeekVideo: "highlight-of-the-week.mp4",
+  pinOfWeekEmbed: "",
+
+  // GALLERY — reuses the same real team photos as the hero photo strip
+  gallery: [
+    "photos/DLS_4949.jpg","photos/CLM_2946.jpg","photos/DLS_6329.jpg",
+    "photos/CLM_5538.jpg","photos/DLS_4037.jpg","photos/CLM_1435.jpg",
+    "photos/DLS_7375.jpg","photos/CLM_3302.jpg","photos/DLS_6016.jpg",
+    "photos/CLM_2987.jpg","photos/DLS_4997-2.jpg","photos/CLM_5536.jpg","photos/DLS_2236.jpg"
+  ]
+};
+/* ═══════════════ end of settings ═══════════════ */
+
+
+/* Apply settings */
+document.getElementById('hmCdOpponent').textContent = HOME_SETTINGS.nextMatch.opponent;
+
+const hmStatEls = document.querySelectorAll('.hm-stat-number');
+const hmStatVals = [HOME_SETTINGS.stats.dualWins, HOME_SETTINGS.stats.pins, HOME_SETTINGS.stats.stateQualifiers];
+hmStatEls.forEach((el, i) => el.dataset.count = hmStatVals[i]);
+
+if (HOME_SETTINGS.pinOfWeekVideo) {
+  const frame = document.getElementById('hmPinFrame');
+  frame.classList.add('has-video');
+  const vid = document.createElement('video');
+  vid.src = HOME_SETTINGS.pinOfWeekVideo;
+  vid.controls = true;
+  vid.playsInline = true;
+  vid.muted = true;
+  vid.preload = 'metadata';
+  vid.setAttribute('aria-label', 'Highlight of the Week');
+  frame.innerHTML = '';
+  frame.appendChild(vid);
+
+  // Play only while scrolled into view; pause the moment it isn't.
+  const hmVideoObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        vid.play().catch(() => {});
+      } else {
+        vid.pause();
+      }
+    });
+  }, { threshold: 0.5 });
+  hmVideoObserver.observe(vid);
+} else if (HOME_SETTINGS.pinOfWeekEmbed) {
+  const frame = document.getElementById('hmPinFrame');
+  frame.innerHTML = '<iframe src="' + HOME_SETTINGS.pinOfWeekEmbed +
+    '" title="Highlight of the Week" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+}
+
+/* Countdown */
+const hmTarget = new Date(HOME_SETTINGS.nextMatch.date).getTime();
+const hmMetaEl = document.getElementById('hmCdMeta');
+const hmMatchDate = new Date(HOME_SETTINGS.nextMatch.date);
+hmMetaEl.textContent = hmMatchDate.toLocaleDateString('en-US', {
+  weekday: 'long', month: 'long', day: 'numeric'
+}) + ' · ' + HOME_SETTINGS.nextMatch.location;
+
+function hmPad(n) { return String(n).padStart(2, '0'); }
+
+function hmTick() {
+  const diff = hmTarget - Date.now();
+  if (diff <= 0) {
+    document.getElementById('hmCdDays').textContent = '00';
+    document.getElementById('hmCdHours').textContent = '00';
+    document.getElementById('hmCdMins').textContent = '00';
+    document.getElementById('hmCdSecs').textContent = '00';
+    document.querySelector('.hm-countdown-label').textContent = 'Match Day';
+    return;
+  }
+  document.getElementById('hmCdDays').textContent  = hmPad(Math.floor(diff / 86400000));
+  document.getElementById('hmCdHours').textContent = hmPad(Math.floor(diff / 3600000) % 24);
+  document.getElementById('hmCdMins').textContent  = hmPad(Math.floor(diff / 60000) % 60);
+  document.getElementById('hmCdSecs').textContent  = hmPad(Math.floor(diff / 1000) % 60);
+}
+hmTick();
+setInterval(hmTick, 1000);
+
+/* Scroll progress bar */
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('hm-progress').style.width = pct + '%';
+}, { passive: true });
+
+/* Scroll-triggered reveals + count-up stats */
+const hmReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function hmCountUp(el) {
+  const end = parseInt(el.dataset.count, 10) || 0;
+  if (hmReduceMotion || end === 0) { el.textContent = end; return; }
+  const dur = 1400;
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / dur, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(end * eased);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+const hmObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('visible');
+    entry.target.querySelectorAll('.hm-stat-number').forEach(hmCountUp);
+    if (entry.target.classList.contains('hm-stat')) {
+      hmCountUp(entry.target.querySelector('.hm-stat-number'));
+    }
+    hmObserver.unobserve(entry.target);
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.hm-stat, .hm-pin-frame').forEach(el => hmObserver.observe(el));
+
+/* ═══ Site-wide scroll reveal (roster, coaches, sponsors, donate, etc.) ═══ */
+const svRevealEls = document.querySelectorAll(
+  '.athlete-card, .coach-card, .support-card, .donate-card, .sponsor-card, .resource-card, .spotlight-card, .value-card, .stat-card'
+);
+
+if (hmReduceMotion) {
+  svRevealEls.forEach(el => el.classList.add('revealed'));
+} else {
+  const svObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('revealed');
+      svObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.15 });
+  svRevealEls.forEach(el => svObserver.observe(el));
+}
+
+/* Jump to a home-page section from the Season dropdown */
+function goHomeSection(sectionId, triggerId) {
+  showPage('home');
+  requestAnimationFrame(() => {
+    const el = document.getElementById(sectionId);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  if (triggerId) {
+    const trig = document.getElementById(triggerId);
+    if (trig) trig.classList.add('active');
+  }
+}
+
+/* ═══ Photo carousel (home page gallery) ═══ */
+const hmCarEl = document.getElementById('hm-carousel');
+const hmDotsEl = document.getElementById('hmCarDots');
+let hmCarIndex = 0;
+let hmCarTimer = null;
+
+HOME_SETTINGS.gallery.forEach((src, i) => {
+  const slide = document.createElement('div');
+  slide.className = 'hm-slide' + (i === 0 ? ' active' : '');
+  slide.setAttribute('role', 'group');
+  slide.setAttribute('aria-label', 'Photo ' + (i + 1) + ' of ' + HOME_SETTINGS.gallery.length);
+
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = 'Woodlands Wrestling photo ' + (i + 1);
+  img.loading = 'lazy';
+  slide.appendChild(img);
+  hmCarEl.appendChild(slide);
+
+  const dot = document.createElement('button');
+  dot.className = 'hm-car-dot' + (i === 0 ? ' active' : '');
+  dot.setAttribute('aria-label', 'Go to photo ' + (i + 1));
+  dot.addEventListener('click', () => { hmGoTo(i); hmRestartAuto(); });
+  hmDotsEl.appendChild(dot);
+});
+
+const hmSlides = hmCarEl.querySelectorAll('.hm-slide');
+const hmDots = hmDotsEl.querySelectorAll('.hm-car-dot');
+
+function hmGoTo(i) {
+  hmSlides[hmCarIndex].classList.remove('active');
+  hmDots[hmCarIndex].classList.remove('active');
+  hmCarIndex = (i + hmSlides.length) % hmSlides.length;
+  hmSlides[hmCarIndex].classList.add('active');
+  hmDots[hmCarIndex].classList.add('active');
+}
+
+function hmRestartAuto() {
+  if (hmReduceMotion) return;
+  clearInterval(hmCarTimer);
+  hmCarTimer = setInterval(() => hmGoTo(hmCarIndex + 1), 4000);
+}
+
+document.getElementById('hmCarPrev').addEventListener('click', () => { hmGoTo(hmCarIndex - 1); hmRestartAuto(); });
+document.getElementById('hmCarNext').addEventListener('click', () => { hmGoTo(hmCarIndex + 1); hmRestartAuto(); });
+
+hmCarEl.addEventListener('mouseenter', () => clearInterval(hmCarTimer));
+hmCarEl.addEventListener('mouseleave', hmRestartAuto);
+
+let hmTouchX = null;
+hmCarEl.addEventListener('touchstart', (e) => { hmTouchX = e.touches[0].clientX; }, { passive: true });
+hmCarEl.addEventListener('touchend', (e) => {
+  if (hmTouchX === null) return;
+  const dx = e.changedTouches[0].clientX - hmTouchX;
+  if (Math.abs(dx) > 40) { hmGoTo(hmCarIndex + (dx < 0 ? 1 : -1)); hmRestartAuto(); }
+  hmTouchX = null;
+}, { passive: true });
+
+hmRestartAuto();
+hmObserver.observe(hmCarEl);
 </script>
 
 </body>
