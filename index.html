@@ -3227,11 +3227,16 @@ if (hmReduceMotion) {
 
 /* Jump to a home-page section from the Season dropdown */
 function goHomeSection(sectionId, triggerId) {
+  const wasAlreadyOnHome = document.getElementById('page-home').classList.contains('active');
   showPage('home');
-  requestAnimationFrame(() => {
+  // showPage fades the old page out over ~180ms (and resets scroll to top)
+  // before the home page actually becomes active when arriving from another
+  // page, so the scroll-to-section has to wait until that settles.
+  const delay = wasAlreadyOnHome ? 50 : 250;
+  setTimeout(() => {
     const el = document.getElementById(sectionId);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+  }, delay);
   if (triggerId) {
     const trig = document.getElementById(triggerId);
     if (trig) trig.classList.add('active');
