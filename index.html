@@ -2151,8 +2151,6 @@
             style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px;"
             src="built_in_the_dark (720p).mp4"
             controls
-            autoplay
-            muted
             loop
             playsinline
             preload="auto"
@@ -2923,7 +2921,7 @@
       const vid = document.getElementById('yt-player');
       if (vid) {
         if (id === 'about') {
-          vid.play();
+          vid.play().catch(() => {});
         } else {
           vid.pause();
         }
