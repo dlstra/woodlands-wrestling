@@ -3043,14 +3043,9 @@
 ═══════════════════════════════════════════════════════════════ */
 const HOME_SETTINGS = {
 
-  // NEXT MATCH — update after each event
-  nextMatch: {
-    opponent: "Mat Bash Tournament",
-    // Format: "YYYY-MM-DDTHH:MM:SS" in local time — exact start time
-    // wasn't listed on the schedule, so 8:00 AM is a placeholder.
-    date: "2026-07-25T08:00:00",
-    location: "Coppell, TX — time TBD"
-  },
+  // NEXT MATCH is no longer set by hand — it's derived automatically from
+  // the first upcoming row (by data-date) in the Competition Schedule table
+  // further down the page. See getNextMatch() below.
 
   // SEASON STATS — bump these as the season goes
   stats: {
@@ -3084,8 +3079,33 @@ const HOME_SETTINGS = {
 /* ═══════════════ end of settings ═══════════════ */
 
 
+/* Next match — auto-picked from the Competition Schedule table: the
+   earliest row whose data-date hasn't passed yet. That table is the only
+   thing that needs updating as the season goes; the countdown follows it. */
+function getNextMatch() {
+  const rows = Array.from(document.querySelectorAll('#competition-schedule-table tbody tr[data-date]'));
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const upcoming = rows
+    .map(row => ({ row, date: new Date(row.dataset.date + 'T00:00:00') }))
+    .filter(r => r.date >= today)
+    .sort((a, b) => a.date - b.date);
+  if (!upcoming.length) return null;
+  const cells = upcoming[0].row.querySelectorAll('td');
+  const homeAway = cells[3].textContent.trim();
+  return {
+    opponent: cells[1].textContent.trim(),
+    dateText: cells[0].textContent.trim(),
+    // Exact start times aren't in the schedule table, so 8:00 AM local is
+    // a placeholder purely for driving the countdown clock.
+    date: upcoming[0].row.dataset.date + 'T08:00:00',
+    location: cells[2].textContent.trim() + (homeAway ? ' — ' + homeAway : '')
+  };
+}
+const hmNextMatch = getNextMatch();
+
 /* Apply settings */
-document.getElementById('hmCdOpponent').textContent = HOME_SETTINGS.nextMatch.opponent;
+document.getElementById('hmCdOpponent').textContent = hmNextMatch ? hmNextMatch.opponent : 'Season Complete';
 
 const hmStatEls = document.querySelectorAll('.hm-stat-number');
 const hmStatVals = [HOME_SETTINGS.stats.dualWins, HOME_SETTINGS.stats.pins, HOME_SETTINGS.stats.stateQualifiers];
@@ -3142,32 +3162,38 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
 }
 
 /* Countdown */
-const hmTarget = new Date(HOME_SETTINGS.nextMatch.date).getTime();
 const hmMetaEl = document.getElementById('hmCdMeta');
-const hmMatchDate = new Date(HOME_SETTINGS.nextMatch.date);
-hmMetaEl.textContent = hmMatchDate.toLocaleDateString('en-US', {
-  weekday: 'long', month: 'long', day: 'numeric'
-}) + ' · ' + HOME_SETTINGS.nextMatch.location;
 
 function hmPad(n) { return String(n).padStart(2, '0'); }
 
-function hmTick() {
-  const diff = hmTarget - Date.now();
-  if (diff <= 0) {
-    document.getElementById('hmCdDays').textContent = '00';
-    document.getElementById('hmCdHours').textContent = '00';
-    document.getElementById('hmCdMins').textContent = '00';
-    document.getElementById('hmCdSecs').textContent = '00';
-    document.querySelector('.hm-countdown-label').textContent = 'Match Day';
-    return;
+if (!hmNextMatch) {
+  hmMetaEl.textContent = 'Check back next season';
+  document.getElementById('hmCdDays').textContent = '00';
+  document.getElementById('hmCdHours').textContent = '00';
+  document.getElementById('hmCdMins').textContent = '00';
+  document.getElementById('hmCdSecs').textContent = '00';
+} else {
+  hmMetaEl.textContent = hmNextMatch.dateText + ' · ' + hmNextMatch.location;
+  const hmTarget = new Date(hmNextMatch.date).getTime();
+
+  function hmTick() {
+    const diff = hmTarget - Date.now();
+    if (diff <= 0) {
+      document.getElementById('hmCdDays').textContent = '00';
+      document.getElementById('hmCdHours').textContent = '00';
+      document.getElementById('hmCdMins').textContent = '00';
+      document.getElementById('hmCdSecs').textContent = '00';
+      document.querySelector('.hm-countdown-label').textContent = 'Match Day';
+      return;
+    }
+    document.getElementById('hmCdDays').textContent  = hmPad(Math.floor(diff / 86400000));
+    document.getElementById('hmCdHours').textContent = hmPad(Math.floor(diff / 3600000) % 24);
+    document.getElementById('hmCdMins').textContent  = hmPad(Math.floor(diff / 60000) % 60);
+    document.getElementById('hmCdSecs').textContent  = hmPad(Math.floor(diff / 1000) % 60);
   }
-  document.getElementById('hmCdDays').textContent  = hmPad(Math.floor(diff / 86400000));
-  document.getElementById('hmCdHours').textContent = hmPad(Math.floor(diff / 3600000) % 24);
-  document.getElementById('hmCdMins').textContent  = hmPad(Math.floor(diff / 60000) % 60);
-  document.getElementById('hmCdSecs').textContent  = hmPad(Math.floor(diff / 1000) % 60);
+  hmTick();
+  setInterval(hmTick, 1000);
 }
-hmTick();
-setInterval(hmTick, 1000);
 
 /* Scroll progress bar */
 window.addEventListener('scroll', () => {
