@@ -1510,9 +1510,11 @@
     .hm-pin-frame.visible { opacity: 1; transform: translateY(0); }
     .hm-pin-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
-    /* Portrait phone-shot clips get their own frame shape instead of a
-       letterboxed 16:9 box, so the video fills the space naturally. */
-    .hm-pin-frame.has-video {
+    /* Portrait phone-shot clips get their own narrower frame shape instead
+       of a letterboxed 16:9 box, so the video fills the space naturally.
+       Landscape clips (the default .hm-pin-frame shape) just keep the
+       16:9 box. Orientation is detected in JS once the video loads. */
+    .hm-pin-frame.has-video.is-portrait {
       aspect-ratio: auto;
       max-width: 420px;
       margin-left: auto;
@@ -3116,6 +3118,15 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
   vid.setAttribute('aria-label', 'Highlight of the Week');
   frame.innerHTML = '';
   frame.appendChild(vid);
+
+  // Detect orientation once the video's real dimensions are known, so
+  // portrait phone clips get the narrow frame and landscape clips keep
+  // the standard 16:9 box.
+  vid.addEventListener('loadedmetadata', () => {
+    if (vid.videoHeight > vid.videoWidth) {
+      frame.classList.add('is-portrait');
+    }
+  });
 
   // Play with sound only while scrolled into view; pause (and reset to
   // muted, ready for the next unmuted attempt) the moment it isn't.
