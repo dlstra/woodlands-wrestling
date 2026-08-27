@@ -1529,6 +1529,19 @@
       border-radius: 7px;
     }
 
+    .hm-pin-unmute {
+      position: absolute; right: 14px; bottom: 14px; z-index: 2;
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold);
+      background: rgba(8,8,8,0.78); border: 1px solid rgba(176,114,53,0.6);
+      border-radius: 999px; padding: 9px 18px; cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+    }
+
+    .hm-pin-unmute:hover { background: rgba(8,8,8,0.92); }
+    .hm-pin-unmute-icon { font-size: 14px; line-height: 1; }
+
     .hm-pin-placeholder { text-align: center; color: var(--muted); font-style: italic; padding: 24px; }
 
     .hm-cta-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; margin: 40px 0 8px; }
@@ -3114,6 +3127,7 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
   vid.src = HOME_SETTINGS.pinOfWeekVideo;
   vid.controls = true;
   vid.playsInline = true;
+  vid.muted = true;
   vid.preload = 'metadata';
   vid.setAttribute('aria-label', 'Highlight of the Week');
   frame.innerHTML = '';
@@ -3128,22 +3142,35 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
     }
   });
 
-  // Play with sound only while scrolled into view; pause (and reset to
-  // muted, ready for the next unmuted attempt) the moment it isn't.
-  // Browsers block unmuted autoplay unless it follows a direct user
-  // gesture — scrolling doesn't count — so if the unmuted attempt is
-  // rejected, fall back to a muted autoplay rather than staying frozen.
+  // Browsers block autoplay-with-sound unless play() is called directly
+  // inside a real click/tap — scrolling into view never counts, no matter
+  // how it's coded — so the video always autoplays muted and this button
+  // is the only reliable way to turn sound on. Once a visitor unmutes,
+  // that choice sticks; it isn't reset just from scrolling away and back,
+  // only on a fresh page load.
+  const unmuteBtn = document.createElement('button');
+  unmuteBtn.type = 'button';
+  unmuteBtn.className = 'hm-pin-unmute';
+  unmuteBtn.setAttribute('aria-label', 'Turn on sound');
+  unmuteBtn.innerHTML = '<span class="hm-pin-unmute-icon">🔇</span> Tap for Sound';
+  unmuteBtn.addEventListener('click', () => {
+    vid.muted = false;
+    vid.play().catch(() => {});
+  });
+  frame.appendChild(unmuteBtn);
+  vid.addEventListener('volumechange', () => {
+    unmuteBtn.style.display = vid.muted ? '' : 'none';
+  });
+
+  // Play (muted, per browser policy above) only while scrolled into
+  // view; pause the moment it isn't. Mute state is left alone here so a
+  // visitor who's already unmuted isn't muted again just by scrolling.
   const hmVideoObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        vid.muted = false;
-        vid.play().catch(() => {
-          vid.muted = true;
-          vid.play().catch(() => {});
-        });
+        vid.play().catch(() => {});
       } else {
         vid.pause();
-        vid.muted = true;
       }
     });
   }, { threshold: 0.5 });
