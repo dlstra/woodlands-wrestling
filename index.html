@@ -978,6 +978,28 @@
 
     .spotlight-link:hover { color: var(--light); border-color: var(--light); }
 
+    /* Bios are cut to the shortest sponsor's length (set by clampSponsorBios
+       in JS) with a fade and a Read more toggle, so cards in a row match. */
+    .spotlight-bio.is-clamped {
+      flex: none; margin-bottom: 10px;
+      max-height: var(--bio-h); overflow: hidden; position: relative;
+    }
+    .spotlight-bio.is-clamped::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+      height: 3.4em; pointer-events: none;
+      background: linear-gradient(rgba(18,18,18,0), rgb(18,18,18));
+    }
+    .spotlight-bio.is-clamped.is-open { max-height: none; }
+    .spotlight-bio.is-clamped.is-open::after { display: none; }
+    .spotlight-more {
+      align-self: flex-start; margin-bottom: 20px; padding: 0;
+      background: none; border: none; cursor: pointer;
+      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .spotlight-more:hover, .spotlight-more:focus-visible { color: var(--light); }
+    .spotlight-bio.is-clamped ~ .spotlight-link { margin-top: auto; }
+
     .thank-you-banner {
       background: rgba(176,114,53,0.07);
       border: 1px solid rgba(176,114,53,0.22);
@@ -3361,6 +3383,65 @@ hmCarEl.addEventListener('touchend', (e) => {
 
 hmRestartAuto();
 hmObserver.observe(hmCarEl);
+</script>
+
+<script>
+/* Sponsor bios: cut every bio to the height of the shortest real one (the
+   "Your Name Here" placeholders don't count), rounded up to a whole line,
+   and give the longer ones a Read more toggle. Heights depend on card width,
+   so this re-measures whenever a grid changes size - which also covers the
+   sponsors page going from hidden to shown. */
+(function () {
+  var bios = Array.prototype.slice.call(document.querySelectorAll('.spotlight-bio'))
+    .filter(function (b) { return b.textContent.indexOf('Add a short description') === -1; });
+  if (!bios.length) return;
+
+  bios.forEach(function (bio) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'spotlight-more';
+    btn.hidden = true;
+    btn.setAttribute('aria-expanded', 'false');
+    btn.textContent = 'Read more';
+    btn.addEventListener('click', function () {
+      var open = bio.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.textContent = open ? 'Show less' : 'Read more';
+    });
+    bio.after(btn);
+  });
+
+  function naturalHeight(bio) {
+    bio.classList.remove('is-clamped');
+    bio.style.flex = 'none';          // flex:1 would report the stretched height
+    var h = bio.scrollHeight;
+    bio.style.flex = '';
+    return h;
+  }
+
+  function clamp() {
+    var heights = bios.map(naturalHeight);
+    if (!heights.some(function (h) { return h > 0; })) return;   // page hidden
+    var shortest = Math.min.apply(null, heights.filter(function (h) { return h > 0; }));
+    var line = parseFloat(getComputedStyle(bios[0]).lineHeight) || 25;
+    var limit = Math.ceil(shortest / line) * line;
+    bios.forEach(function (bio, i) {
+      var cut = heights[i] > limit + line / 2;   // don't hide less than half a line
+      bio.classList.toggle('is-clamped', cut);
+      bio.style.setProperty('--bio-h', limit + 'px');
+      bio.nextElementSibling.hidden = !cut;
+    });
+  }
+
+  var pending = false;
+  var ro = new ResizeObserver(function () {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () { pending = false; clamp(); });
+  });
+  document.querySelectorAll('.spotlight-grid').forEach(function (g) { ro.observe(g); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(clamp);
+})();
 </script>
 
 </body>
