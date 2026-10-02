@@ -838,6 +838,28 @@
     .info-list li { font-size: 15px; color: var(--light); padding: 12px 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 6px; display: flex; gap: 12px; align-items: flex-start; line-height: 1.5; }
     .info-list li span.icon { display: none; }
 
+    /* Key dates: past items fade with a check, the next one gets an arrow
+       (classes set by markKeyDates() from each li's data-date = last day) */
+    #key-dates li { position: relative; transition: opacity .3s; }
+    #key-dates li.kd-past { opacity: .42; }
+    #key-dates li.kd-past::before { content: '\2713'; color: var(--muted); font-weight: 700; }
+    #key-dates li.kd-next {
+      border-color: var(--gold); background: rgba(176,114,53,0.10);
+      box-shadow: 0 0 0 1px rgba(176,114,53,0.35), 0 0 22px rgba(176,114,53,0.18);
+    }
+    #key-dates li.kd-next::before {
+      content: '\25B6'; color: var(--gold); font-size: 13px; line-height: 22px;
+      animation: kdNudge 1.6s ease-in-out infinite;
+    }
+    #key-dates .kd-tag {
+      margin-left: auto; align-self: center; white-space: nowrap;
+      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .14em;
+      text-transform: uppercase; color: #080808; background: var(--gold);
+      padding: 3px 9px; border-radius: 3px;
+    }
+    @keyframes kdNudge { 0%,100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+    @media (prefers-reduced-motion: reduce) { #key-dates li.kd-next::before { animation: none; } }
+
     .info-table { width: 100%; border-collapse: collapse; }
     .info-table th { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
     .info-table td { padding: 12px 14px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--light); }
@@ -2247,14 +2269,16 @@
     <p class="booster-intro">As the season approaches, we will adjust the practice schedule as needed to ensure our athletes are fully prepared. The official competition season begins on <strong style="color:var(--gold);">November 9th</strong>.</p>
 
     <div class="section-title" style="margin-bottom:24px;">Key Wrestling Season Dates</div>
-    <ul class="info-list" style="margin-bottom:56px;">
-      <li><div><strong>September 14:</strong> Afterschool practice begins</div></li>
-      <li><div><strong>October 1:</strong> First day for minimum weight certification</div></li>
-      <li><div><strong>November 9:</strong> First day for duals, triangular and quadrangular meets, and tournaments</div></li>
-      <li><div><strong>January 16:</strong> Last day for weight certifications</div></li>
-      <li><div><strong>January 30:</strong> District Certification</div></li>
-      <li><div><strong>February 5–6:</strong> Regional Meet</div></li>
-      <li><div><strong>February 12–13:</strong> State Meet</div></li>
+    <ul class="info-list" id="key-dates" style="margin-bottom:56px;">
+      <li data-date="2026-09-14"><div><strong>September 14:</strong> Afterschool practice begins</div></li>
+      <li data-date="2026-10-01"><div><strong>October 1:</strong> First day for minimum weight certification</div></li>
+      <li data-date="2026-10-17"><div><strong>October 17:</strong> Team Paintball at Texas Legends Paintball</div></li>
+      <li data-date="2026-10-21"><div><strong>October 21:</strong> Weight Certification at Oak Ridge HS, 5:00 p.m. (bring $5). Team dinner afterward: BJ&rsquo;s for the girls, Chi Japanese Cuisine &amp; Sushi Bar for the boys</div></li>
+      <li data-date="2026-11-09"><div><strong>November 9:</strong> First day for duals, triangular and quadrangular meets, and tournaments</div></li>
+      <li data-date="2027-01-16"><div><strong>January 16:</strong> Last day for weight certifications</div></li>
+      <li data-date="2027-01-30"><div><strong>January 30:</strong> District Certification</div></li>
+      <li data-date="2027-02-06"><div><strong>February 5–6:</strong> Regional Meet</div></li>
+      <li data-date="2027-02-13"><div><strong>February 12–13:</strong> State Meet</div></li>
     </ul>
 
     <!-- ── COMPETITION SCHEDULE ── -->
@@ -3441,6 +3465,32 @@ hmObserver.observe(hmCarEl);
   });
   document.querySelectorAll('.spotlight-grid').forEach(function (g) { ro.observe(g); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(clamp);
+})();
+</script>
+
+<script>
+/* Key Wrestling Season Dates: dim what has passed, point at what's next.
+   Each li's data-date is its LAST day, so a two-day meet stays current
+   through its second day. Add new dates with the same attribute. */
+(function markKeyDates(){
+  var list = document.getElementById('key-dates'); if (!list) return;
+  var today = new Date(); today.setHours(0,0,0,0);
+  var items = [].slice.call(list.querySelectorAll('li[data-date]'));
+  var next = null;
+  items.forEach(function(li){
+    var p = li.getAttribute('data-date').split('-');
+    var d = new Date(+p[0], +p[1]-1, +p[2]);
+    var past = d < today;
+    li.classList.toggle('kd-past', past);
+    if (!past && !next) next = li;
+  });
+  if (next){
+    next.classList.add('kd-next');
+    var tag = document.createElement('span');
+    tag.className = 'kd-tag';
+    tag.textContent = (+new Date(next.getAttribute('data-date') + 'T00:00') === +today) ? 'Today' : 'Next up';
+    next.appendChild(tag);
+  }
 })();
 </script>
 
