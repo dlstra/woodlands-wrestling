@@ -382,7 +382,9 @@
     .track-wrap { position: relative; overflow: hidden; z-index: 15; }
 
     .track {
-      display: flex; gap: 16px; padding: 0 16px;
+      /* spacing is margin-right on each panel (not gap/padding) so the
+         doubled track is exactly two equal halves and the -50% loop is seamless */
+      display: flex;
       width: max-content;
       animation: scrollLeft 42s linear infinite; align-items: center;
     }
@@ -395,7 +397,7 @@
     }
 
     .panel {
-      width: 260px; height: 320px; border-radius: 8px; flex-shrink: 0; overflow: hidden;
+      width: 260px; height: 320px; border-radius: 8px; flex-shrink: 0; overflow: hidden; margin-right: 16px;
       border: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.45);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 8px; color: rgba(255,255,255,0.3); font-size: 12px;
