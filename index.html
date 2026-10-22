@@ -1607,6 +1607,12 @@
     .hm-feat .hm-slide { transition: opacity 0.5s ease; }
     .hm-feat .hm-slide img { object-fit: cover; }
     .hm-feat .hm-car-btn { width: 52px; height: 52px; font-size: 22px; }
+    .hm-feat .hm-slide.portrait { background: var(--fill) center / cover no-repeat; }
+    .hm-feat .hm-slide.portrait::before {
+      content: ''; position: absolute; inset: 0;
+      backdrop-filter: blur(28px) brightness(0.4); -webkit-backdrop-filter: blur(28px) brightness(0.4);
+    }
+    .hm-feat .hm-slide.portrait img { position: relative; object-fit: contain; }
     .hm-feat .hm-slide-caption {
       font-family: 'Bebas Neue', sans-serif; font-style: normal; font-size: 30px;
       letter-spacing: 0.08em; padding: 60px 90px 16px;
@@ -3346,11 +3352,13 @@ const HOME_SETTINGS = {
 
   // FEATURED — large click-through photos in the hero (no autoplay).
   // Each photo needs a 1800px file plus a 1200px "-1200" copy for phones.
+  // Portrait photos are shown whole over a blurred fill instead of cropped.
   // Optional "sub" adds a smaller second caption line (e.g. names, left to right).
   featured: [
     { src: "photos/DLS_7300.jpg", caption: "2025 UIL 6A State Placers",
       sub: "Brynlee Mooney, 2nd Place · Claire Guydon, State Champion · Elliotte Strange, 5th Place" },
     { src: "photos/DLS_7115.jpg", caption: "Senior Leaders" },
+    { src: "photos/DLS_7283.jpg", caption: "Senior Leaders" },
     { src: "photos/DLS_7124.jpg", caption: "Boys Varsity Lineup" },
     { src: "photos/DLS_7291.jpg", caption: "Girls Varsity Lineup" },
     { src: "photos/DLS_7296.jpg", caption: "Girls Varsity Lineup" },
@@ -3600,6 +3608,12 @@ HOME_SETTINGS.featured.forEach(({ src, caption, sub }, i) => {
   img.sizes = '(max-width: 768px) calc(100vw - 40px), 900px';
   img.alt = 'Woodlands Wrestling ' + (caption || 'featured photo ' + (i + 1));
   if (i > 0) img.loading = 'lazy';
+  img.addEventListener('load', () => {
+    if (img.naturalHeight > img.naturalWidth) {
+      slide.classList.add('portrait');
+      slide.style.setProperty('--fill', 'url("' + img.currentSrc + '")');
+    }
+  });
   slide.appendChild(img);
   if (caption) {
     const cap = document.createElement('div');
