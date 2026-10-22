@@ -1611,6 +1611,11 @@
       font-family: 'Bebas Neue', sans-serif; font-style: normal; font-size: 30px;
       letter-spacing: 0.08em; padding: 60px 90px 16px;
     }
+    .hm-slide-sub {
+      display: block; margin-top: 2px; font-family: 'Cinzel', serif; font-size: 13px;
+      letter-spacing: 0.06em; color: var(--gold); line-height: 1.5;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+    }
     .hm-feat-count {
       position: absolute; right: 14px; bottom: 12px; z-index: 5;
       font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.16em;
@@ -1676,6 +1681,7 @@
       .hero-feat-wrap { width: calc(100% - 40px); margin-bottom: 28px; }
       .hm-feat .hm-car-btn { width: 40px; height: 40px; font-size: 18px; }
       .hm-feat .hm-slide-caption { font-size: 20px; padding: 40px 60px 10px; }
+      .hm-slide-sub { font-size: 11px; letter-spacing: 0.03em; }
       .hm-countdown-wrap { margin-top: -70px; }
       .hm-countdown-digits { gap: 10px; }
     }
@@ -3340,14 +3346,16 @@ const HOME_SETTINGS = {
 
   // FEATURED — large click-through photos in the hero (no autoplay).
   // Each photo needs a 1800px file plus a 1200px "-1200" copy for phones.
+  // Optional "sub" adds a smaller second caption line (e.g. names, left to right).
   featured: [
-    { src: "photos/DLS_7300.jpg", caption: "2025 UIL 6A State Placers" },
+    { src: "photos/DLS_7300.jpg", caption: "2025 UIL 6A State Placers",
+      sub: "Brynlee Mooney, 2nd Place · Claire Guydon, State Champion · Elliotte Strange, 5th Place" },
     { src: "photos/DLS_7115.jpg", caption: "Senior Leaders" },
     { src: "photos/DLS_7124.jpg", caption: "Boys Varsity Lineup" },
-    { src: "photos/DLS_7290.jpg", caption: "Girls Varsity Lineup" },
     { src: "photos/DLS_7291.jpg", caption: "Girls Varsity Lineup" },
     { src: "photos/DLS_7296.jpg", caption: "Girls Varsity Lineup" },
-    { src: "photos/DLS_7316.jpg", caption: "2025 UIL 6A State Placers" }
+    { src: "photos/DLS_7316.jpg", caption: "2025 UIL 6A State Placers",
+      sub: "Brynlee Mooney, 2nd Place · Claire Guydon, State Champion · Elliotte Strange, 5th Place" }
   ],
 
   // GALLERY — reuses the same real team photos as the hero photo strip
@@ -3580,7 +3588,7 @@ const hmFeatDotsEl = document.getElementById('hmFeatDots');
 const hmFeatCount = document.getElementById('hmFeatCount');
 let hmFeatIndex = 0;
 
-HOME_SETTINGS.featured.forEach(({ src, caption }, i) => {
+HOME_SETTINGS.featured.forEach(({ src, caption, sub }, i) => {
   const slide = document.createElement('div');
   slide.className = 'hm-slide' + (i === 0 ? ' active' : '');
   slide.setAttribute('role', 'group');
@@ -3597,6 +3605,19 @@ HOME_SETTINGS.featured.forEach(({ src, caption }, i) => {
     const cap = document.createElement('div');
     cap.className = 'hm-slide-caption';
     cap.textContent = caption;
+    if (sub) {
+      const subEl = document.createElement('span');
+      subEl.className = 'hm-slide-sub';
+      // keep each "Name, Place" together so lines only break between names
+      sub.split(' · ').forEach((part, j) => {
+        if (j) subEl.append(' · ');
+        const seg = document.createElement('span');
+        seg.style.whiteSpace = 'nowrap';
+        seg.textContent = part;
+        subEl.appendChild(seg);
+      });
+      cap.appendChild(subEl);
+    }
     slide.appendChild(cap);
   }
   hmFeatEl.appendChild(slide);
