@@ -322,10 +322,10 @@
 
     .hero-logo {
       position: absolute;
-      right: 180px;
-      top: 20px;
-      width: 400px;
-      height: 400px;
+      right: 12%;
+      top: 18px;
+      width: 220px;
+      height: 220px;
       object-fit: contain;
       opacity: 0.32;
       z-index: 8;
@@ -1346,7 +1346,7 @@
       .hero-title span { font-size: 30px; }
 
       .hero-logo {
-        width: 180px; height: 180px;
+        width: 120px; height: 120px;
         right: 16px;
         top: 12px;
       }
@@ -1607,6 +1607,10 @@
     .hm-feat .hm-slide { transition: opacity 0.5s ease; }
     .hm-feat .hm-slide img { object-fit: cover; }
     .hm-feat .hm-car-btn { width: 52px; height: 52px; font-size: 22px; }
+    .hm-feat .hm-slide-caption {
+      font-family: 'Bebas Neue', sans-serif; font-style: normal; font-size: 30px;
+      letter-spacing: 0.08em; padding: 60px 90px 16px;
+    }
     .hm-feat-count {
       position: absolute; right: 14px; bottom: 12px; z-index: 5;
       font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.16em;
@@ -1671,6 +1675,7 @@
       .hm-section { padding: 24px 20px; }
       .hero-feat-wrap { width: calc(100% - 40px); margin-bottom: 28px; }
       .hm-feat .hm-car-btn { width: 40px; height: 40px; font-size: 18px; }
+      .hm-feat .hm-slide-caption { font-size: 20px; padding: 40px 60px 10px; }
       .hm-countdown-wrap { margin-top: -70px; }
       .hm-countdown-digits { gap: 10px; }
     }
@@ -3333,10 +3338,14 @@ const HOME_SETTINGS = {
     licenseCode: "US3GRUXTHDEJB5PW"
   },
 
-  // FEATURED — large click-through photos shown above the gallery (no autoplay)
+  // FEATURED — large click-through photos in the hero (no autoplay).
+  // Each photo needs a 1800px file plus a 1200px "-1200" copy for phones.
   featured: [
-    "photos/DLS_7115.jpg","photos/DLS_7124.jpg","photos/DLS_7290.jpg",
-    "photos/DLS_7291.jpg","photos/DLS_7296.jpg"
+    { src: "photos/DLS_7115.jpg", caption: "Boys Senior Leaders" },
+    { src: "photos/DLS_7124.jpg", caption: "Boys Varsity Lineup" },
+    { src: "photos/DLS_7290.jpg", caption: "Girls Varsity Lineup" },
+    { src: "photos/DLS_7291.jpg", caption: "Girls Varsity Lineup" },
+    { src: "photos/DLS_7296.jpg", caption: "Girls Varsity Lineup" }
   ],
 
   // GALLERY — reuses the same real team photos as the hero photo strip
@@ -3569,7 +3578,7 @@ const hmFeatDotsEl = document.getElementById('hmFeatDots');
 const hmFeatCount = document.getElementById('hmFeatCount');
 let hmFeatIndex = 0;
 
-HOME_SETTINGS.featured.forEach((src, i) => {
+HOME_SETTINGS.featured.forEach(({ src, caption }, i) => {
   const slide = document.createElement('div');
   slide.className = 'hm-slide' + (i === 0 ? ' active' : '');
   slide.setAttribute('role', 'group');
@@ -3577,9 +3586,17 @@ HOME_SETTINGS.featured.forEach((src, i) => {
 
   const img = document.createElement('img');
   img.src = src;
-  img.alt = 'Woodlands Wrestling featured photo ' + (i + 1);
+  img.srcset = src.replace(/\.jpg$/, '-1200.jpg') + ' 1200w, ' + src + ' 1800w';
+  img.sizes = '(max-width: 768px) calc(100vw - 40px), 900px';
+  img.alt = 'Woodlands Wrestling ' + (caption || 'featured photo ' + (i + 1));
   if (i > 0) img.loading = 'lazy';
   slide.appendChild(img);
+  if (caption) {
+    const cap = document.createElement('div');
+    cap.className = 'hm-slide-caption';
+    cap.textContent = caption;
+    slide.appendChild(cap);
+  }
   hmFeatEl.appendChild(slide);
 
   const dot = document.createElement('button');
