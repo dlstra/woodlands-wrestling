@@ -297,21 +297,21 @@
 
     /* ── HERO ── */
     .hero {
-      position: relative; width: 100%; height: calc(100vh - 60px); overflow: hidden;
+      position: relative; width: 100%; overflow: hidden;
+      display: flex; flex-direction: column; padding-bottom: 150px;
       background-image: url('tartan-bg.png');
       background-size: cover; background-position: center;
     }
 
     .hero-overlay-top {
-      position: absolute; top: 0; left: 0; right: 0;
+      position: relative;
       background: linear-gradient(to bottom, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0) 100%);
       z-index: 10;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-end;
-      padding: 0 48px 28px;
-      height: 26%;
+      padding: 48px 48px 28px;
     }
 
     .hero-tagline-top {
@@ -323,7 +323,7 @@
     .hero-logo {
       position: absolute;
       right: 180px;
-      bottom: calc(45% + 80px);
+      top: 20px;
       width: 400px;
       height: 400px;
       object-fit: contain;
@@ -379,7 +379,7 @@
       color: rgba(255,255,255,0.85); letter-spacing: 0.2em; text-transform: uppercase;
     }
 
-    .track-wrap { position: absolute; top: 58%; transform: translateY(-50%); left: 0; right: 0; overflow: hidden; z-index: 15; }
+    .track-wrap { position: relative; overflow: hidden; z-index: 15; }
 
     .track {
       display: flex; gap: 16px; padding: 0 16px;
@@ -1338,14 +1338,9 @@
       }
 
       /* HERO */
-      .hero { height: calc(100svh - 60px); }
+      .hero { padding-bottom: 110px; }
 
-      .hero-overlay-top { padding: 20px 20px 40px; height: 35%; }
-
-      /* Anchor the photo track near the bottom divider instead of a
-         top-percentage position — on a tall phone screen that leaves
-         a large dead gap of plain background beneath the photos. */
-      .track-wrap { top: auto; bottom: 100px; transform: none; }
+      .hero-overlay-top { padding: 28px 20px 24px; }
 
       .hero-title { font-size: 42px; }
       .hero-title span { font-size: 30px; }
@@ -1353,7 +1348,7 @@
       .hero-logo {
         width: 180px; height: 180px;
         right: 16px;
-        bottom: calc(45% + 80px);
+        top: 12px;
       }
 
       .panel { width: 140px; height: 175px; }
@@ -1602,10 +1597,10 @@
 
     .hm-car-dot.active { background: var(--gold); transform: scale(1.25); }
 
-    /* ── Featured photos (click-through, wider than the gallery) ── */
-    .hm-section.hm-featured { max-width: 1400px; }
+    /* ── Featured photos (hero, click-through, larger than the strip) ── */
+    .hero-feat-wrap { position: relative; z-index: 12; width: min(900px, 100% - 96px); margin: 8px auto 40px; }
     .hm-feat {
-      position: relative; margin-top: 40px; aspect-ratio: 3 / 2;
+      position: relative; aspect-ratio: 3 / 2;
       background: rgba(0,0,0,0.55); border: 1px solid var(--border);
       border-top: 3px solid var(--gold); border-radius: 8px; overflow: hidden;
     }
@@ -1674,6 +1669,8 @@
     @media (max-width: 768px) {
       .hm-stats { grid-template-columns: 1fr; }
       .hm-section { padding: 24px 20px; }
+      .hero-feat-wrap { width: calc(100% - 40px); margin-bottom: 28px; }
+      .hm-feat .hm-car-btn { width: 40px; height: 40px; font-size: 18px; }
       .hm-countdown-wrap { margin-top: -70px; }
       .hm-countdown-digits { gap: 10px; }
     }
@@ -1770,6 +1767,15 @@
       <h1 class="hero-title">Woodlands Wrestling<span>2026–2027</span></h1>
     </div>
     <img class="hero-logo" src="logo.png" alt="The Woodlands High School logo" />
+    <!-- Featured photos — click to advance, sits above the scrolling strip -->
+    <div class="hero-feat-wrap">
+      <div class="hm-feat" id="hm-feat" aria-roledescription="carousel" aria-label="Featured photos" tabindex="0">
+        <button class="hm-car-btn prev" id="hmFeatPrev" aria-label="Previous photo">&#10094;</button>
+        <button class="hm-car-btn next" id="hmFeatNext" aria-label="Next photo">&#10095;</button>
+        <span class="hm-feat-count" id="hmFeatCount" aria-live="polite"></span>
+      </div>
+      <div class="hm-car-dots" id="hmFeatDots"></div>
+    </div>
     <div class="track-wrap">
       <div class="track" id="track"></div>
     </div>
@@ -1808,20 +1814,6 @@
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">Pins</div></div>
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">State Qualifiers</div></div>
     </div>
-  </section>
-
-  <span class="hm-thread"></span>
-
-  <!-- ══ FEATURED PHOTOS (click to advance) ══ -->
-  <section class="hm-section hm-featured" id="hm-featured">
-    <p class="hm-eyebrow">Featured</p>
-    <h2 class="hm-title">Highlanders in Action</h2>
-    <div class="hm-feat" id="hm-feat" aria-roledescription="carousel" aria-label="Featured photos" tabindex="0">
-      <button class="hm-car-btn prev" id="hmFeatPrev" aria-label="Previous photo">&#10094;</button>
-      <button class="hm-car-btn next" id="hmFeatNext" aria-label="Next photo">&#10095;</button>
-      <span class="hm-feat-count" id="hmFeatCount" aria-live="polite"></span>
-    </div>
-    <div class="hm-car-dots" id="hmFeatDots"></div>
   </section>
 
   <span class="hm-thread"></span>
