@@ -390,7 +390,11 @@
       will-change: transform;
     }
 
-    .track:hover { animation-play-state: paused; }
+    /* pause on hover only where there's a real mouse — on iPhone a touch
+       leaves the strip stuck in :hover, which froze it mid-scroll */
+    @media (hover: hover) and (pointer: fine) {
+      .track:hover { animation-play-state: paused; }
+    }
 
     @keyframes scrollLeft {
       0%   { transform: translateX(0); }
