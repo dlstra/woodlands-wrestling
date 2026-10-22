@@ -1602,6 +1602,22 @@
 
     .hm-car-dot.active { background: var(--gold); transform: scale(1.25); }
 
+    /* ── Featured photos (click-through, wider than the gallery) ── */
+    .hm-section.hm-featured { max-width: 1400px; }
+    .hm-feat {
+      position: relative; margin-top: 40px; aspect-ratio: 3 / 2;
+      background: rgba(0,0,0,0.55); border: 1px solid var(--border);
+      border-top: 3px solid var(--gold); border-radius: 8px; overflow: hidden;
+    }
+    .hm-feat .hm-slide { transition: opacity 0.5s ease; }
+    .hm-feat .hm-slide img { object-fit: cover; }
+    .hm-feat .hm-car-btn { width: 52px; height: 52px; font-size: 22px; }
+    .hm-feat-count {
+      position: absolute; right: 14px; bottom: 12px; z-index: 5;
+      font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.16em;
+      color: var(--light); background: rgba(8,8,8,0.6); padding: 4px 10px; border-radius: 12px;
+    }
+
     /* ── Pin of the Week ── */
     .hm-pin-frame {
       margin-top: 40px; position: relative; aspect-ratio: 16 / 9;
@@ -1792,6 +1808,20 @@
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">Pins</div></div>
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">State Qualifiers</div></div>
     </div>
+  </section>
+
+  <span class="hm-thread"></span>
+
+  <!-- ══ FEATURED PHOTOS (click to advance) ══ -->
+  <section class="hm-section hm-featured" id="hm-featured">
+    <p class="hm-eyebrow">Featured</p>
+    <h2 class="hm-title">Highlanders in Action</h2>
+    <div class="hm-feat" id="hm-feat" aria-roledescription="carousel" aria-label="Featured photos" tabindex="0">
+      <button class="hm-car-btn prev" id="hmFeatPrev" aria-label="Previous photo">&#10094;</button>
+      <button class="hm-car-btn next" id="hmFeatNext" aria-label="Next photo">&#10095;</button>
+      <span class="hm-feat-count" id="hmFeatCount" aria-live="polite"></span>
+    </div>
+    <div class="hm-car-dots" id="hmFeatDots"></div>
   </section>
 
   <span class="hm-thread"></span>
@@ -3311,6 +3341,12 @@ const HOME_SETTINGS = {
     licenseCode: "US3GRUXTHDEJB5PW"
   },
 
+  // FEATURED — large click-through photos shown above the gallery (no autoplay)
+  featured: [
+    "photos/DLS_7115.jpg","photos/DLS_7124.jpg","photos/DLS_7290.jpg",
+    "photos/DLS_7291.jpg","photos/DLS_7296.jpg"
+  ],
+
   // GALLERY — reuses the same real team photos as the hero photo strip
   gallery: [
     "photos/DLS_4949.jpg","photos/CLM_2946.jpg","photos/DLS_6329.jpg",
@@ -3534,6 +3570,61 @@ function goHomeSection(sectionId, triggerId) {
     if (trig) trig.classList.add('active');
   }
 }
+
+/* ═══ Featured photos — advances only on click, swipe or arrow keys ═══ */
+const hmFeatEl = document.getElementById('hm-feat');
+const hmFeatDotsEl = document.getElementById('hmFeatDots');
+const hmFeatCount = document.getElementById('hmFeatCount');
+let hmFeatIndex = 0;
+
+HOME_SETTINGS.featured.forEach((src, i) => {
+  const slide = document.createElement('div');
+  slide.className = 'hm-slide' + (i === 0 ? ' active' : '');
+  slide.setAttribute('role', 'group');
+  slide.setAttribute('aria-label', 'Photo ' + (i + 1) + ' of ' + HOME_SETTINGS.featured.length);
+
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = 'Woodlands Wrestling featured photo ' + (i + 1);
+  if (i > 0) img.loading = 'lazy';
+  slide.appendChild(img);
+  hmFeatEl.appendChild(slide);
+
+  const dot = document.createElement('button');
+  dot.className = 'hm-car-dot' + (i === 0 ? ' active' : '');
+  dot.setAttribute('aria-label', 'Go to photo ' + (i + 1));
+  dot.addEventListener('click', () => hmFeatGoTo(i));
+  hmFeatDotsEl.appendChild(dot);
+});
+
+const hmFeatSlides = hmFeatEl.querySelectorAll('.hm-slide');
+const hmFeatDots = hmFeatDotsEl.querySelectorAll('.hm-car-dot');
+
+function hmFeatGoTo(i) {
+  hmFeatSlides[hmFeatIndex].classList.remove('active');
+  hmFeatDots[hmFeatIndex].classList.remove('active');
+  hmFeatIndex = (i + hmFeatSlides.length) % hmFeatSlides.length;
+  hmFeatSlides[hmFeatIndex].classList.add('active');
+  hmFeatDots[hmFeatIndex].classList.add('active');
+  hmFeatCount.textContent = (hmFeatIndex + 1) + ' / ' + hmFeatSlides.length;
+}
+hmFeatGoTo(0);
+
+document.getElementById('hmFeatPrev').addEventListener('click', () => hmFeatGoTo(hmFeatIndex - 1));
+document.getElementById('hmFeatNext').addEventListener('click', () => hmFeatGoTo(hmFeatIndex + 1));
+hmFeatEl.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') hmFeatGoTo(hmFeatIndex - 1);
+  if (e.key === 'ArrowRight') hmFeatGoTo(hmFeatIndex + 1);
+});
+
+let hmFeatTouchX = null;
+hmFeatEl.addEventListener('touchstart', (e) => { hmFeatTouchX = e.touches[0].clientX; }, { passive: true });
+hmFeatEl.addEventListener('touchend', (e) => {
+  if (hmFeatTouchX === null) return;
+  const dx = e.changedTouches[0].clientX - hmFeatTouchX;
+  if (Math.abs(dx) > 40) hmFeatGoTo(hmFeatIndex + (dx < 0 ? 1 : -1));
+  hmFeatTouchX = null;
+}, { passive: true });
 
 /* ═══ Photo carousel (home page gallery) ═══ */
 const hmCarEl = document.getElementById('hm-carousel');
