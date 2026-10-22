@@ -505,6 +505,11 @@
     #page-roster-boys .weight-class,
     #page-roster-girls .weight-class { margin-bottom: 0; }
 
+    /* Hide weight classes that still only have the placeholder card —
+       they show up automatically once a real wrestler is added */
+    #page-roster-boys .weight-class:has(.headshot-placeholder),
+    #page-roster-girls .weight-class:has(.headshot-placeholder) { display: none; }
+
     .athlete-grid {
       display: block;
     }
