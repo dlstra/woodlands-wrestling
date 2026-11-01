@@ -1555,7 +1555,8 @@
     }
 
     /* ── Stats band ── */
-    .hm-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 40px; }
+    .hm-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 40px; }
+    @media (max-width: 1024px) { .hm-stats { grid-template-columns: repeat(2, 1fr); } }
 
     .hm-stat {
       text-align: center; padding: 30px 16px 26px;
@@ -1851,6 +1852,7 @@
     <p class="hm-eyebrow">By the Numbers</p>
     <h2 class="hm-title">This Season</h2>
     <div class="hm-stats">
+      <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">All-Americans</div></div>
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">Total Wins</div></div>
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">Pins</div></div>
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">State Qualifiers</div></div>
@@ -3315,9 +3317,10 @@ const HOME_SETTINGS = {
 
   // SEASON STATS — bump these as the season goes
   stats: {
-    dualWins: 0,
-    pins: 0,
-    stateQualifiers: 0
+    dualWins: 8,
+    pins: 4,
+    stateQualifiers: 0,
+    allAmericans: 1
   },
 
   // HIGHLIGHT OF THE WEEK — either drop a local video file into the project
@@ -3389,7 +3392,7 @@ const hmNextMatch = getNextMatch();
 document.getElementById('hmCdOpponent').textContent = hmNextMatch ? hmNextMatch.opponent : 'Season Complete';
 
 const hmStatEls = document.querySelectorAll('.hm-stat-number');
-const hmStatVals = [HOME_SETTINGS.stats.dualWins, HOME_SETTINGS.stats.pins, HOME_SETTINGS.stats.stateQualifiers];
+const hmStatVals = [HOME_SETTINGS.stats.allAmericans, HOME_SETTINGS.stats.dualWins, HOME_SETTINGS.stats.pins, HOME_SETTINGS.stats.stateQualifiers];
 hmStatEls.forEach((el, i) => el.dataset.count = hmStatVals[i]);
 
 if (HOME_SETTINGS.pinOfWeekVideo) {
