@@ -1683,6 +1683,13 @@
       margin-right: auto;
     }
 
+    /* Two or more clips side by side, stacked on phones */
+    .hm-pin-pair {
+      display: flex; justify-content: center; align-items: flex-start;
+      gap: 24px; flex-wrap: wrap; margin-top: 40px;
+    }
+    .hm-pin-pair .hm-pin-frame { margin: 0; flex: 1 1 300px; max-width: 420px; }
+
     .hm-pin-frame video {
       width: 100%;
       height: auto;
@@ -3328,8 +3335,9 @@ const HOME_SETTINGS = {
   // HIGHLIGHT OF THE WEEK — either drop a local video file into the project
   // and set pinOfWeekVideo (takes priority), or paste a YouTube embed URL into
   // pinOfWeekEmbed (e.g. "https://www.youtube.com/embed/VIDEO_ID"). Leave both
-  // "" for the placeholder.
-  pinOfWeekVideo: "highlight-of-the-week-with-music.mp4",
+  // "" for the placeholder. pinOfWeekVideo can also be a list of files; they
+  // show side by side (stacked on phones) in list order.
+  pinOfWeekVideo: ["girls-hype.mp4", "boys-hype.mp4"],
   pinOfWeekEmbed: "",
   // Required attribution credit for the free Uppbeat music track mixed into
   // pinOfWeekVideo above. Leave "" if that video has no Uppbeat music in it.
@@ -3398,10 +3406,32 @@ const hmStatVals = [HOME_SETTINGS.stats.allAmericans, HOME_SETTINGS.stats.dualWi
 hmStatEls.forEach((el, i) => el.dataset.count = hmStatVals[i]);
 
 if (HOME_SETTINGS.pinOfWeekVideo) {
-  const frame = document.getElementById('hmPinFrame');
+  const pinVideos = [].concat(HOME_SETTINGS.pinOfWeekVideo);
+  const firstFrame = document.getElementById('hmPinFrame');
+  const pinFrames = [firstFrame];
+  let creditAnchor = firstFrame;
+  // Several clips: wrap the frames in a row, one frame per clip.
+  if (pinVideos.length > 1) {
+    const pair = document.createElement('div');
+    pair.className = 'hm-pin-pair';
+    firstFrame.replaceWith(pair);
+    pair.appendChild(firstFrame);
+    for (let i = 1; i < pinVideos.length; i++) {
+      const f = document.createElement('div');
+      f.className = 'hm-pin-frame';
+      pair.appendChild(f);
+      pinFrames.push(f);
+    }
+    creditAnchor = pair;
+  }
+  const pinVids = [];
+  pinVideos.forEach((src, i) => setupPinVideo(pinFrames[i], src));
+
+  function setupPinVideo(frame, src) {
   frame.classList.add('has-video');
   const vid = document.createElement('video');
-  vid.src = HOME_SETTINGS.pinOfWeekVideo;
+  pinVids.push(vid);
+  vid.src = src;
   vid.controls = true;
   vid.playsInline = true;
   vid.muted = true;
@@ -3430,7 +3460,11 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
   unmuteBtn.className = 'hm-pin-unmute';
   unmuteBtn.setAttribute('aria-label', 'Turn on sound');
   unmuteBtn.innerHTML = '<span class="hm-pin-unmute-icon">🔇</span> Tap for Sound';
+  // Sound on restarts the clip so the music plays from the top; only one
+  // clip has sound at a time.
   unmuteBtn.addEventListener('click', () => {
+    pinVids.forEach(v => { if (v !== vid) v.muted = true; });
+    vid.currentTime = 0;
     vid.muted = false;
     vid.play().catch(() => {});
   });
@@ -3452,6 +3486,7 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
     });
   }, { threshold: 0.5 });
   hmVideoObserver.observe(vid);
+  }
 
   if (HOME_SETTINGS.pinOfWeekMusicCredit && HOME_SETTINGS.pinOfWeekMusicCredit.text) {
     const credit = document.createElement('p');
@@ -3462,7 +3497,7 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
     link.style.color = 'inherit';
     link.textContent = HOME_SETTINGS.pinOfWeekMusicCredit.text;
     credit.appendChild(link);
-    frame.insertAdjacentElement('afterend', credit);
+    creditAnchor.insertAdjacentElement('afterend', credit);
   }
 } else if (HOME_SETTINGS.pinOfWeekEmbed) {
   const frame = document.getElementById('hmPinFrame');
