@@ -3523,6 +3523,34 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
   }, { threshold: pinThresholds });
   pinGroupObserver.observe(pinGroupEl);
 
+  // Start downloading the clips while the visitor is still scrolling toward
+  // them, so they're ready to play the moment they're on screen. Some phone
+  // browsers ignore preload, so each clip also gets a silent, instant
+  // play-and-pause off screen, which makes every browser start buffering.
+  let pinWarmed = false;
+  function warmPinGroup() {
+    if (pinWarmed) return;
+    pinWarmed = true;
+    pinVids.forEach(v => {
+      v.preload = 'auto';
+      if (pinGroupVisible || !v.paused || v.currentTime > 0) return;
+      setPinMuted(v, true);
+      v.play().then(() => {
+        if (!pinGroupVisible) {
+          v.pause();
+          v.currentTime = 0;
+        }
+      }).catch(() => {});
+    });
+  }
+  const pinWarmObserver = new IntersectionObserver((entries) => {
+    if (entries.some(e => e.isIntersecting)) {
+      warmPinGroup();
+      pinWarmObserver.disconnect();
+    }
+  }, { rootMargin: '1500px 0px' });
+  pinWarmObserver.observe(pinGroupEl);
+
   // Stop the music when the visitor switches tabs; pick back up on return.
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) pausePinGroup();
