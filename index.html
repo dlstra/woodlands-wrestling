@@ -3166,9 +3166,10 @@
       const donateWm = document.getElementById('donate-watermark');
       if (donateWm) donateWm.style.display = (id === 'donate') ? 'block' : 'none';
 
-      /* Leaving the home page stops the highlight videos and their music */
+      /* Leaving the home page stops the highlight videos and their music and
+         rewinds them, so they start from the beginning on the way back */
       if (id !== 'home' && window.hmPinVids) {
-        window.hmPinVids.forEach(v => v.pause());
+        window.hmPinVids.forEach(v => { v.pause(); v.currentTime = 0; });
       }
 
       /* Play/pause video based on page */
@@ -3431,7 +3432,6 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
     creditAnchor = pair;
   }
   const pinVids = [];
-  const pinObservers = [];
   // The clip whose music should be on. Starts as the girls clip; moves to
   // whichever clip a visitor turns sound on for, and clears if they mute it.
   let pinSoundVid = null;
@@ -3461,31 +3461,72 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
     pinActivationEvents.forEach(t => document.addEventListener(t, go, true));
   }
 
-  function startPinVideo(v) {
-    if (v !== pinSoundVid) {
+  // The clips run as one group: they start, pause, resume and restart
+  // together, so they stay in step unless a visitor uses a clip's own
+  // controls. Only the sound clip is unmuted, and only once the browser
+  // allows sound (see armPinSoundOnInteraction above).
+  function playPinGroup() {
+    const allEnded = pinVids.every(v => v.ended);
+    const canSound = !navigator.userActivation || navigator.userActivation.hasBeenActive;
+    pinVids.forEach(v => {
+      if (allEnded) v.currentTime = 0;
+      // A clip that finished first waits for the others; see 'ended' below.
+      else if (v.ended) return;
+      if (v === pinSoundVid) {
+        if (canSound) {
+          setPinMuted(v, false);
+          v.play().catch(() => {
+            setPinMuted(v, true);
+            v.play().catch(() => {});
+            armPinSoundOnInteraction();
+          });
+          return;
+        }
+        setPinMuted(v, true);
+        armPinSoundOnInteraction();
+      }
       v.play().catch(() => {});
-      return;
-    }
-    setPinMuted(v, false);
-    v.play().catch(() => {
-      setPinMuted(v, true);
-      v.play().catch(() => {});
-      armPinSoundOnInteraction();
     });
+  }
+
+  function pausePinGroup() {
+    pinVids.forEach(v => v.pause());
   }
 
   pinVideos.forEach((src, i) => setupPinVideo(pinFrames[i], src));
   pinSoundVid = pinVids.find(v => /girls/i.test(v.getAttribute('src'))) || pinVids[0];
   window.hmPinVids = pinVids;
 
+  // Clips of different lengths: when the last one finishes, all of them
+  // start again from the top together.
+  pinVids.forEach(v => v.addEventListener('ended', () => {
+    if (pinVids.every(x => x.ended) && pinGroupVisible && !document.hidden) playPinGroup();
+  }));
+
+  // Play the group (and its music) only while at least half of the clips
+  // are on screen; pause both the moment less than half is showing. If the
+  // stacked clips are so tall that half of them can't fit in the window
+  // (small phones), they play while they fill the whole window.
+  const pinGroupEl = pinFrames.length > 1 ? pinFrames[0].parentElement : pinFrames[0];
+  let pinGroupVisible = false;
+  const pinThresholds = Array.from({ length: 21 }, (_, i) => i / 20);
+  const pinGroupObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const viewH = entry.rootBounds ? entry.rootBounds.height : window.innerHeight;
+      const needed = Math.min(0.5 * entry.boundingClientRect.height, viewH - 1);
+      const visible = entry.isIntersecting && entry.intersectionRect.height >= needed;
+      if (visible === pinGroupVisible) return;
+      pinGroupVisible = visible;
+      if (visible && !document.hidden) playPinGroup();
+      else pausePinGroup();
+    });
+  }, { threshold: pinThresholds });
+  pinGroupObserver.observe(pinGroupEl);
+
   // Stop the music when the visitor switches tabs; pick back up on return.
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      pinVids.forEach(v => v.pause());
-    } else {
-      // Re-observing makes each observer report its clip's current visibility.
-      pinVids.forEach((v, i) => { pinObservers[i].unobserve(v); pinObservers[i].observe(v); });
-    }
+    if (document.hidden) pausePinGroup();
+    else if (pinGroupVisible) playPinGroup();
   });
 
   function setupPinVideo(frame, src) {
@@ -3517,14 +3558,16 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
   unmuteBtn.className = 'hm-pin-unmute';
   unmuteBtn.setAttribute('aria-label', 'Turn on sound');
   unmuteBtn.innerHTML = '<span class="hm-pin-unmute-icon">🔇</span> Tap for Sound';
-  // Sound on restarts the clip so the music plays from the top; only one
-  // clip has sound at a time.
+  // Sound on restarts both clips together so this clip's music plays from
+  // the top; only one clip has sound at a time.
   unmuteBtn.addEventListener('click', () => {
     pinSoundVid = vid;
-    pinVids.forEach(v => { if (v !== vid) setPinMuted(v, true); });
-    vid.currentTime = 0;
+    pinVids.forEach(v => {
+      if (v !== vid) setPinMuted(v, true);
+      v.currentTime = 0;
+    });
     setPinMuted(vid, false);
-    vid.play().catch(() => {});
+    pinVids.forEach(v => v.play().catch(() => {}));
   });
   frame.appendChild(unmuteBtn);
   vid.addEventListener('volumechange', () => {
@@ -3539,20 +3582,6 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
       pinSoundVid = null;
     }
   });
-
-  // Play only while scrolled into view; pause the moment it isn't. The
-  // clip that owns the music starts with sound when the browser allows it.
-  const hmVideoObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && !document.hidden) {
-        startPinVideo(vid);
-      } else {
-        vid.pause();
-      }
-    });
-  }, { threshold: 0.5 });
-  hmVideoObserver.observe(vid);
-  pinObservers.push(hmVideoObserver);
   }
 
   if (HOME_SETTINGS.pinOfWeekMusicCredit && HOME_SETTINGS.pinOfWeekMusicCredit.text) {
