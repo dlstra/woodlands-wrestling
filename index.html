@@ -3166,6 +3166,11 @@
       const donateWm = document.getElementById('donate-watermark');
       if (donateWm) donateWm.style.display = (id === 'donate') ? 'block' : 'none';
 
+      /* Leaving the home page stops the highlight videos and their music */
+      if (id !== 'home' && window.hmPinVids) {
+        window.hmPinVids.forEach(v => v.pause());
+      }
+
       /* Play/pause video based on page */
       const vid = document.getElementById('yt-player');
       if (vid) {
@@ -3426,7 +3431,62 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
     creditAnchor = pair;
   }
   const pinVids = [];
+  const pinObservers = [];
+  // The clip whose music should be on. Starts as the girls clip; moves to
+  // whichever clip a visitor turns sound on for, and clears if they mute it.
+  let pinSoundVid = null;
+
+  // Mute/unmute from the page itself. Remembered on the element so the
+  // volumechange handler can tell these apart from a visitor's own change.
+  function setPinMuted(v, muted) {
+    v._pageMuted = muted;
+    v.muted = muted;
+  }
+
+  // Browsers refuse to start sound until the visitor has clicked, tapped or
+  // pressed a key on the page. Until then the sound clip plays muted, and
+  // its music comes on at that first click, tap or key press.
+  let pinSoundArmed = false;
+  const pinActivationEvents = ['click', 'keydown', 'touchend'];
+  function armPinSoundOnInteraction() {
+    if (pinSoundArmed) return;
+    pinSoundArmed = true;
+    const go = () => {
+      pinActivationEvents.forEach(t => document.removeEventListener(t, go, true));
+      pinSoundArmed = false;
+      const v = pinSoundVid;
+      const onHome = document.getElementById('page-home').classList.contains('active');
+      if (v && !v.paused && onHome) setPinMuted(v, false);
+    };
+    pinActivationEvents.forEach(t => document.addEventListener(t, go, true));
+  }
+
+  function startPinVideo(v) {
+    if (v !== pinSoundVid) {
+      v.play().catch(() => {});
+      return;
+    }
+    setPinMuted(v, false);
+    v.play().catch(() => {
+      setPinMuted(v, true);
+      v.play().catch(() => {});
+      armPinSoundOnInteraction();
+    });
+  }
+
   pinVideos.forEach((src, i) => setupPinVideo(pinFrames[i], src));
+  pinSoundVid = pinVids.find(v => /girls/i.test(v.getAttribute('src'))) || pinVids[0];
+  window.hmPinVids = pinVids;
+
+  // Stop the music when the visitor switches tabs; pick back up on return.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      pinVids.forEach(v => v.pause());
+    } else {
+      // Re-observing makes each observer report its clip's current visibility.
+      pinVids.forEach((v, i) => { pinObservers[i].unobserve(v); pinObservers[i].observe(v); });
+    }
+  });
 
   function setupPinVideo(frame, src) {
   frame.classList.add('has-video');
@@ -3435,7 +3495,7 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
   vid.src = src;
   vid.controls = true;
   vid.playsInline = true;
-  vid.muted = true;
+  setPinMuted(vid, true);
   vid.preload = 'metadata';
   vid.setAttribute('aria-label', 'Highlight of the Week');
   frame.innerHTML = '';
@@ -3450,12 +3510,8 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
     }
   });
 
-  // Browsers block autoplay-with-sound unless play() is called directly
-  // inside a real click/tap — scrolling into view never counts, no matter
-  // how it's coded — so the video always autoplays muted and this button
-  // is the only reliable way to turn sound on. Once a visitor unmutes,
-  // that choice sticks; it isn't reset just from scrolling away and back,
-  // only on a fresh page load.
+  // Shown while the clip is muted. On the girls clip it also covers the
+  // case where the browser hasn't allowed sound yet.
   const unmuteBtn = document.createElement('button');
   unmuteBtn.type = 'button';
   unmuteBtn.className = 'hm-pin-unmute';
@@ -3464,29 +3520,39 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
   // Sound on restarts the clip so the music plays from the top; only one
   // clip has sound at a time.
   unmuteBtn.addEventListener('click', () => {
-    pinVids.forEach(v => { if (v !== vid) v.muted = true; });
+    pinSoundVid = vid;
+    pinVids.forEach(v => { if (v !== vid) setPinMuted(v, true); });
     vid.currentTime = 0;
-    vid.muted = false;
+    setPinMuted(vid, false);
     vid.play().catch(() => {});
   });
   frame.appendChild(unmuteBtn);
   vid.addEventListener('volumechange', () => {
     unmuteBtn.style.display = vid.muted ? '' : 'none';
+    if (vid.muted === vid._pageMuted) return; // the page's own change
+    // A visitor used the video's own sound control.
+    vid._pageMuted = vid.muted;
+    if (!vid.muted) {
+      pinSoundVid = vid;
+      pinVids.forEach(v => { if (v !== vid) setPinMuted(v, true); });
+    } else if (pinSoundVid === vid) {
+      pinSoundVid = null;
+    }
   });
 
-  // Play (muted, per browser policy above) only while scrolled into
-  // view; pause the moment it isn't. Mute state is left alone here so a
-  // visitor who's already unmuted isn't muted again just by scrolling.
+  // Play only while scrolled into view; pause the moment it isn't. The
+  // clip that owns the music starts with sound when the browser allows it.
   const hmVideoObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        vid.play().catch(() => {});
+      if (entry.isIntersecting && !document.hidden) {
+        startPinVideo(vid);
       } else {
         vid.pause();
       }
     });
   }, { threshold: 0.5 });
   hmVideoObserver.observe(vid);
+  pinObservers.push(hmVideoObserver);
   }
 
   if (HOME_SETTINGS.pinOfWeekMusicCredit && HOME_SETTINGS.pinOfWeekMusicCredit.text) {
