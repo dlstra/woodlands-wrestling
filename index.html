@@ -506,6 +506,13 @@
     #page-roster-boys .weight-class,
     #page-roster-girls .weight-class { margin-bottom: 0; }
 
+    /* Girls roster art: its own row, one card wide, centered */
+    #girls-watermark {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: calc((100% - 56px) / 3);
+    }
+
     /* Hide weight classes that still only have the placeholder card —
        they show up automatically once a real wrestler is added */
     #page-roster-boys .weight-class:has(.headshot-placeholder),
@@ -1396,6 +1403,7 @@
         column-gap: 12px;
         row-gap: 36px;
       }
+      #girls-watermark { width: calc((100% - 12px) / 2); }
 
       /* COACHES */
       .coaches-grid { grid-template-columns: 1fr; }
@@ -2247,7 +2255,7 @@
       <div class="athlete-grid"><div class="athlete-card girls-card"><div class="headshot"><img src="photos/roster/girls-vanessa-mendoza.jpg" alt="Vanessa Mendoza" loading="lazy" /></div><div class="athlete-info"><div class="athlete-name">Vanessa Mendoza</div><div class="athlete-meta"><span class="athlete-year">Senior</span><span class="athlete-record">0–0</span></div></div></div></div>
     </div>
 
-    <div style="display:flex; align-items:center; justify-content:center; align-self:center; padding-top:32px;">
+    <div id="girls-watermark" style="display:flex; align-items:center; justify-content:center; align-self:center; padding-top:32px;">
       <img src="hwc-watermark-girls.png" style="width:100%; opacity:0.70; border-radius:8px; pointer-events:none;" />
     </div>
 
