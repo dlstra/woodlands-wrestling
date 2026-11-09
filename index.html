@@ -205,6 +205,7 @@
       font-family: 'Cinzel', serif; font-size: 10px;
       letter-spacing: 0.1em; text-transform: uppercase;
       padding: 7px 10px; cursor: pointer; border-radius: 4px;
+      white-space: nowrap;
       transition: color 0.2s, background 0.2s;
     }
 
@@ -1782,10 +1783,10 @@
     </div>
     <div class="nav-dropdown" id="season-dropdown">
       <button class="nav-dropdown-trigger" id="nav-season-trigger" onclick="toggleDropdown('season-dropdown-menu')">
-        Season ▾
+        26-27 Season ▾
       </button>
       <div class="nav-dropdown-menu" id="season-dropdown-menu">
-        <button onclick="showPage('schedule');                             closeAllDropdowns()">Schedule</button>
+        <button onclick="showPage('schedule');                             closeAllDropdowns()">26-27 Schedule</button>
         <button onclick="showPage('fuel');                                 closeAllDropdowns()">Fuel &amp; Hydration</button>
         <button onclick="goHomeSection('hm-gallery','nav-season-trigger'); closeAllDropdowns()">Gallery</button>
         <button onclick="goHomeSection('hm-pin','nav-season-trigger');     closeAllDropdowns()">Highlight of the Week</button>
