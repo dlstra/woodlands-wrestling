@@ -40,7 +40,7 @@
   <meta name="twitter:title" content="The Woodlands High School Wrestling | Highlanders 2026–2027" />
   <meta name="twitter:description" content="Official site of TWHS Highlander Wrestling. Boys and girls roster, competition schedule, coaches, booster club, and more." />
   <meta name="twitter:image" content="https://www.twhswrestling.com/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=Barlow:wght@400;500;600&family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=Barlow:wght@400;500;600&family=Archivo:wght@600;800&family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --gold:    #B07235;
@@ -860,6 +860,17 @@
     .commit-text p { font-family: 'Crimson Pro', Georgia, serif; font-size: 19px; line-height: 1.65; color: rgba(240,235,224,0.82); margin: 0 0 16px; }
     .commit-text p:last-child { margin-bottom: 0; }
     .commit-sign { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 22px; color: var(--light) !important; }
+    /* School-branded card: set --school on the card to the college's colour */
+    .commit-card.school-brand { border-bottom-color: var(--school); }
+    .school-brand .commit-eyebrow, .school-brand .commit-school { color: var(--school); }
+    .school-brand .commit-divider { background: var(--school); opacity: 1; }
+    .commit-band { grid-column: 1 / -1; display: flex; align-items: stretch; background: var(--school); font-family: 'Archivo', sans-serif; text-transform: uppercase; }
+    .commit-band-label { background: #000; color: #fff; font-weight: 800; font-size: 15px; letter-spacing: 0.04em; padding: 12px 40px 12px 24px; clip-path: polygon(0 0, 100% 0, calc(100% - 18px) 100%, 0 100%); white-space: nowrap; display: flex; align-items: center; }
+    .commit-band-links { display: flex; flex-wrap: wrap; margin-left: auto; }
+    .commit-band-links a { display: flex; align-items: center; padding: 12px 16px; color: #000; font-weight: 600; font-size: 12px; letter-spacing: 0.06em; text-decoration: none; border-left: 1px solid rgba(0,0,0,0.18); transition: background 0.2s, color 0.2s; }
+    .commit-band-links a:hover, .commit-band-links a:focus-visible { background: #000; color: #fff; outline: none; }
+    .commit-cta { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; margin-top: 26px; padding: 12px 20px; background: var(--school); color: #000; font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: background 0.2s, color 0.2s; }
+    .commit-cta:hover, .commit-cta:focus-visible { background: #fff; color: #000; outline: none; }
     .commit-graphic { margin: 32px auto 0; max-width: 460px; }
     .commit-photo-natural { min-height: 0; display: flex; align-items: center; background: #000; }
     .commit-photo-natural img { position: static; height: auto; object-fit: contain; }
@@ -870,6 +881,11 @@
       .commit-card { grid-template-columns: 1fr; }
       .commit-photo { min-height: 0; aspect-ratio: 4 / 5; }
       .commit-photo-natural { aspect-ratio: auto; }
+      .commit-band { flex-wrap: wrap; }
+      .commit-band-label { width: 100%; clip-path: none; padding: 10px 22px; }
+      .commit-band-links { margin-left: 0; width: 100%; }
+      .commit-band-links a { flex: 1; justify-content: center; padding: 10px 6px; font-size: 11px; }
+      .commit-band-links a:first-child { border-left: none; }
       .commit-photo-placeholder { border-right: none; border-bottom: 1px dashed var(--border); }
       .commit-body { padding: 28px 22px 32px; }
       .commit-intro { font-size: 19px; }
@@ -2770,7 +2786,16 @@
 
     <!-- To add a wrestler: duplicate this .commit-card, swap the photo, name, school and text,
          and bump HOME_SETTINGS.stats.collegeCommitments. -->
-    <article class="commit-card">
+    <article class="commit-card school-brand" style="--school:#FF6600;">
+      <div class="commit-band">
+        <div class="commit-band-label">Georgetown Tigers &middot; Women&rsquo;s Wrestling</div>
+        <div class="commit-band-links" role="navigation" aria-label="Georgetown College women's wrestling">
+          <a href="https://georgetowncollegeathletics.com/sports/wwrest/index" target="_blank" rel="noopener">Program</a>
+          <a href="https://georgetowncollegeathletics.com/sports/wwrest/2026-27/Schedule" target="_blank" rel="noopener">Schedule</a>
+          <a href="https://georgetowncollegeathletics.com/sports/wwrest/2026-27/Roster" target="_blank" rel="noopener">Roster</a>
+          <a href="https://georgetowncollegeathletics.com/sports/wwrest/coaches/index" target="_blank" rel="noopener">Coaches</a>
+        </div>
+      </div>
       <div class="commit-photo commit-photo-natural"><img src="photos/commit-claire-guydon-graphic.jpg" alt="Claire Guydon committed to Georgetown College Women's Wrestling, Class of 2027" /></div>
       <div class="commit-body">
         <div class="commit-eyebrow">Committed</div>
@@ -2784,6 +2809,7 @@
           <p>Her commitment shows every young wrestler in our room what is possible when talent meets dedication. We can&rsquo;t wait to watch her compete at the next level as a Georgetown Tiger.</p>
           <p class="commit-sign">Congratulations, Claire&nbsp;&mdash; once a Highlander, always a Highlander.</p>
         </div>
+        <a class="commit-cta" href="https://georgetowncollegeathletics.com/sports/wwrest/index" target="_blank" rel="noopener">Visit Georgetown Women&rsquo;s Wrestling &#8599;</a>
       </div>
     </article>
     <figure class="commit-graphic">
