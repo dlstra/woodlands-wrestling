@@ -838,6 +838,43 @@
 
 
     /* ── FUEL & HYDRATION ── */
+    /* ── COLLEGE COMMITMENTS ── */
+    .commit-intro { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 22px; line-height: 1.55; color: var(--muted); max-width: 860px; margin-bottom: 36px; }
+    .commit-card {
+      display: grid; grid-template-columns: minmax(260px, 460px) 1fr; gap: 0;
+      background-image: linear-gradient(rgba(18,18,18,0.9), rgba(18,18,18,0.9)), url('tartan-bg.png');
+      background-size: cover; background-position: center;
+      border: 1px solid var(--border); border-bottom: 3px solid #2d5a27; border-radius: 8px; overflow: hidden;
+    }
+    .commit-card + .commit-card { margin-top: 32px; }
+    .commit-photo { min-height: 480px; background: rgba(0,0,0,0.5); position: relative; }
+    .commit-photo img { position: absolute; inset: 0; }
+    .commit-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .commit-photo-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); border-right: 1px dashed var(--border); }
+    .commit-body { padding: 40px 44px; display: flex; flex-direction: column; justify-content: center; }
+    .commit-eyebrow { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+    .commit-name { font-family: 'Bebas Neue', sans-serif; font-size: clamp(44px, 6vw, 64px); letter-spacing: 0.06em; line-height: 1; color: #fff; margin-top: 10px; }
+    .commit-school { font-family: 'Cinzel', serif; font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-top: 10px; }
+    .commit-place { font-family: 'Barlow', sans-serif; font-size: 13px; letter-spacing: 0.06em; color: var(--muted); margin-top: 4px; }
+    .commit-divider { width: 64px; height: 2px; background: var(--gold); opacity: 0.7; margin: 24px 0; }
+    .commit-text p { font-family: 'Crimson Pro', Georgia, serif; font-size: 19px; line-height: 1.65; color: rgba(240,235,224,0.82); margin: 0 0 16px; }
+    .commit-text p:last-child { margin-bottom: 0; }
+    .commit-sign { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 22px; color: var(--light) !important; }
+    .commit-graphic { margin: 32px auto 0; max-width: 460px; }
+    .commit-photo-natural { min-height: 0; display: flex; align-items: center; background: #000; }
+    .commit-photo-natural img { position: static; height: auto; object-fit: contain; }
+    .commit-graphic img { width: 100%; height: auto; display: block; border-radius: 8px; border: 1px solid var(--border); }
+    .hm-stat.hm-stat-link { cursor: pointer; }
+    .hm-stat.hm-stat-link:hover, .hm-stat.hm-stat-link:focus-visible { border-color: rgba(176,114,53,0.5); outline: none; }
+    @media (max-width: 768px) {
+      .commit-card { grid-template-columns: 1fr; }
+      .commit-photo { min-height: 0; aspect-ratio: 4 / 5; }
+      .commit-photo-natural { aspect-ratio: auto; }
+      .commit-photo-placeholder { border-right: none; border-bottom: 1px dashed var(--border); }
+      .commit-body { padding: 28px 22px 32px; }
+      .commit-intro { font-size: 19px; }
+    }
+
     .fuel-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 28px; border-bottom: 1px solid var(--border); }
     .fuel-tab {
       font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
@@ -1795,6 +1832,7 @@
       </button>
       <div class="nav-dropdown-menu" id="season-dropdown-menu">
         <button onclick="showPage('schedule');                             closeAllDropdowns()">26-27 Schedule</button>
+        <button onclick="showPage('commitments');                          closeAllDropdowns()">26-27 College Commitments</button>
         <button onclick="showPage('fuel');                                 closeAllDropdowns()">Fuel &amp; Hydration</button>
         <button onclick="goHomeSection('hm-gallery','nav-season-trigger'); closeAllDropdowns()">Gallery</button>
         <button onclick="goHomeSection('hm-pin','nav-season-trigger');     closeAllDropdowns()">Highlight of the Week</button>
@@ -1874,7 +1912,7 @@
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">Total Wins</div></div>
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">Pins</div></div>
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">State Qualifiers</div></div>
-      <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">College Commitments</div></div>
+      <div class="hm-stat hm-stat-link" role="link" tabindex="0" onclick="showPage('commitments')" onkeydown="if(event.key==='Enter')showPage('commitments')"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">College Commitments</div></div>
     </div>
   </section>
 
@@ -2722,6 +2760,38 @@
   </script>
 </div>
 
+<!-- ══════════ COLLEGE COMMITMENTS ══════════ -->
+<div class="page" id="page-commitments">
+  <div class="page-header">
+    <div class="page-header-content"><h2>26-27 College Commitments</h2><p>Highlanders at the next level</p></div>
+  </div>
+  <div class="page-content">
+    <p class="commit-intro">Every season, Highlander wrestlers earn the chance to keep competing after high school. This page celebrates the athletes who have committed to wrestle in college.</p>
+
+    <!-- To add a wrestler: duplicate this .commit-card, swap the photo, name, school and text,
+         and bump HOME_SETTINGS.stats.collegeCommitments. -->
+    <article class="commit-card">
+      <div class="commit-photo commit-photo-natural"><img src="photos/commit-claire-guydon-graphic.jpg" alt="Claire Guydon committed to Georgetown College Women's Wrestling, Class of 2027" /></div>
+      <div class="commit-body">
+        <div class="commit-eyebrow">Committed</div>
+        <div class="commit-name">Claire Guydon</div>
+        <div class="commit-school">Georgetown College &middot; Women&rsquo;s Wrestling</div>
+        <div class="commit-place">Georgetown, Kentucky &middot; Class of 2027</div>
+        <div class="commit-divider"></div>
+        <div class="commit-text">
+          <p>The Woodlands Wrestling family is proud to congratulate <strong>Claire Guydon</strong> on receiving&mdash;and accepting&mdash;an offer to continue her wrestling and academic career at <strong>Georgetown College</strong>.</p>
+          <p>A college offer is never handed out. It is earned through early mornings, hard practices, long tournament days and the quiet discipline of showing up when no one is watching. Claire has put in that work, and this moment is the reward for every bit of it.</p>
+          <p>Her commitment shows every young wrestler in our room what is possible when talent meets dedication. We can&rsquo;t wait to watch her compete at the next level as a Georgetown Tiger.</p>
+          <p class="commit-sign">Congratulations, Claire&nbsp;&mdash; once a Highlander, always a Highlander.</p>
+        </div>
+      </div>
+    </article>
+    <figure class="commit-graphic">
+      <img src="photos/commit-claire-guydon.jpg" alt="Claire Guydon in a Georgetown College singlet, holding her wrestling shoes" loading="lazy" />
+    </figure>
+  </div>
+</div>
+
 <div class="page" id="page-info">
   <div class="page-header">
     <div class="page-header-content"><h2>Links &amp; Forms</h2><p>Parent &amp; Athlete Resources</p></div>
@@ -3198,7 +3268,7 @@
       if (['about','roster-boys','roster-girls','coaches'].includes(id)) {
         document.getElementById('nav-team-trigger').classList.add('active');
       // Highlight the Season trigger for season-group pages
-      } else if (id === 'schedule' || id === 'fuel') {
+      } else if (['schedule','fuel','commitments'].includes(id)) {
         document.getElementById('nav-season-trigger').classList.add('active');
       // Highlight the Program trigger for program-group pages
       } else if (['info','sponsors','celebrate','booster','contact','store'].includes(id)) {
