@@ -1566,8 +1566,8 @@
     }
 
     /* ── Stats band ── */
-    .hm-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 40px; }
-    @media (max-width: 1024px) { .hm-stats { grid-template-columns: repeat(2, 1fr); } }
+    .hm-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; margin-top: 40px; }
+    @media (max-width: 1024px) { .hm-stats { grid-template-columns: repeat(3, 1fr); } }
 
     .hm-stat {
       text-align: center; padding: 30px 16px 26px;
@@ -1874,6 +1874,7 @@
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">Total Wins</div></div>
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">Pins</div></div>
       <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">State Qualifiers</div></div>
+      <div class="hm-stat"><div class="hm-stat-number" data-count="0">0</div><div class="hm-stat-label">College Commitments</div></div>
     </div>
   </section>
 
@@ -3344,7 +3345,8 @@ const HOME_SETTINGS = {
     dualWins: 13,
     pins: 8,
     stateQualifiers: 0,
-    allAmericans: 1
+    allAmericans: 1,
+    collegeCommitments: 1   // Claire Guydon — Georgetown College
   },
 
   // HIGHLIGHT OF THE WEEK — either drop a local video file into the project
@@ -3417,7 +3419,7 @@ const hmNextMatch = getNextMatch();
 document.getElementById('hmCdOpponent').textContent = hmNextMatch ? hmNextMatch.opponent : 'Season Complete';
 
 const hmStatEls = document.querySelectorAll('.hm-stat-number');
-const hmStatVals = [HOME_SETTINGS.stats.allAmericans, HOME_SETTINGS.stats.dualWins, HOME_SETTINGS.stats.pins, HOME_SETTINGS.stats.stateQualifiers];
+const hmStatVals = [HOME_SETTINGS.stats.allAmericans, HOME_SETTINGS.stats.dualWins, HOME_SETTINGS.stats.pins, HOME_SETTINGS.stats.stateQualifiers, HOME_SETTINGS.stats.collegeCommitments];
 hmStatEls.forEach((el, i) => el.dataset.count = hmStatVals[i]);
 
 if (HOME_SETTINGS.pinOfWeekVideo) {
