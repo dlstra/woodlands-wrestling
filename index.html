@@ -3558,12 +3558,19 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
     const go = () => {
       // A scroll swipe also ends in touchend but doesn't permit sound; keep
       // waiting for a real click, tap or key press.
-      if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return;
+      if (navigator.userActivation && !navigator.userActivation.isActive) return;
       pinActivationEvents.forEach(t => document.removeEventListener(t, go, true));
       pinSoundArmed = false;
       const v = pinSoundVid;
       const onHome = document.getElementById('page-home').classList.contains('active');
-      if (v && !v.paused && onHome) playPinWithSound(v);
+      if (!v) return;
+      if (!v.paused && onHome) { playPinWithSound(v); return; }
+      // Not on screen yet. iPhones allow sound per video, so a silent
+      // play-and-pause inside this tap unlocks the clip; its music can then
+      // start by itself when it scrolls into view.
+      setPinMuted(v, false);
+      v.play().catch(() => {});
+      v.pause();
     };
     pinActivationEvents.forEach(t => document.addEventListener(t, go, true));
   }
@@ -3601,6 +3608,8 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
   pinVideos.forEach((src, i) => setupPinVideo(pinFrames[i], src));
   pinSoundVid = pinVids.find(v => /girls/i.test(v.getAttribute('src'))) || pinVids[0];
   window.hmPinVids = pinVids;
+  // Listen from page load so the first tap anywhere unlocks the music.
+  armPinSoundOnInteraction();
 
   // Start the group (and its music) as soon as the clips scroll into view
   // (10% showing); on the way out, pause once less than half is showing. If the
@@ -3640,6 +3649,7 @@ if (HOME_SETTINGS.pinOfWeekVideo) {
     pinVids.forEach(v => {
       v.preload = 'auto';
       if (pinGroupVisible || !v.paused || v.currentTime > 0) return;
+      if (v === pinSoundVid && !v.muted) return; // already unlocked by a tap
       setPinMuted(v, true);
       v.play().then(() => {
         if (!pinGroupVisible) {
